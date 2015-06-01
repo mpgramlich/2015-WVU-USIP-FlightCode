@@ -6,8 +6,6 @@
  */
 #include "RGPIO.h"
 
-extern OS_SEM PITSem;
-
 void RGPIO::gpioWaitTask(void * pd)
 {
 	iprintf("waitTask started\r\n");
@@ -17,6 +15,7 @@ void RGPIO::gpioWaitTask(void * pd)
 	{
 		OSSemPend(&PITSem,0);
 		USER_ENTER_CRITICAL();
+			//heres where we disable all other experiments
 		timer->pollingDelay(.002);
 		asm("nop");
 		pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;

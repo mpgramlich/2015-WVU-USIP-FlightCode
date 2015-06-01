@@ -13,11 +13,14 @@
 #include <ucos.h>
 
 static volatile PWORD pRGPIO_BAR = (PWORD) RGPIO_BAR;
+
+extern OS_SEM PITSem;
 extern OS_SEM waitTaskStart;
 
 namespace RGPIO {
 
 	void gpioWaitTask(void * pd);
+
 	void SetupRGPIO();
 
 }

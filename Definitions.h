@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <pins.h>
 #include <pitr_sem.h>
+#include <sim5441x.h>
+#include <SysLog.h>
 #include <NetworkDebug.h>
 #include <HiResTimer.h>
 
@@ -43,5 +45,31 @@
 //HiResTimers
 	static HiResTimer* timer = HiResTimer::getHiResTimer(2);
 
+//ADC SPI
+	#define ADCTableSize 5000;
+
+	#define ADCSPI 1
+	#define ADCdspiBaudRate 70000000
+	#define ADCtransferSizeBits 24
+	#define ADCChipSelects 0x00
+	#define ADCCSPolarityIdle 0x0E //Chip select polarity at idle
+								//ADC Idle Low 0x0E
+	#define ADCClockPolarity 0x00
+
+//DAC SPI
+	#define DACSPI 1
+	#define DACdspiBaudRate 20000000
+	#define DACtransferSizeBits 24
+	#define DACChipSelects 0x00
+	#define DACCSPolarityIdle 0x0F //Chip select polarity at idle
+								//DAC Idle High 0x0F
+	#define DACClockPolarity 0x00
+
+//Synth SPI
+	#define SYNTHSPI 1
+	#define SYNTHdspiBaudRate 20000000
+	#define SYNTHtransferSizeBits 24
+	#define SYNTHCSPolarityIdle 0x0F //Chip select polarity at idle
+								//SYNTH Idle High ??
 
 #endif /* DEFINITIONS_H_ */
