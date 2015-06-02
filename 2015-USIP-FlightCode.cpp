@@ -17,9 +17,9 @@
 OS_SEM PITSem;
 OS_SEM waitTaskStart;
 
-ADC ADC(ADCSPI);
-DAC DAC(DACSPI);
-Synth Synth(SYNTHSPI);
+ADC* adc;
+//DAC DAC(DACSPI);
+//Synth Synth(SYNTHSPI);
 
 //externally linked stuff
 
@@ -38,23 +38,32 @@ void UserMain(void * pd) {
     //EnableTaskMonitor();
     EnableSmartTraps();
 
-    SysLogAddress = AsciiToIp("10.20.15.10");
+    SysLogAddress = AsciiToIp("192.168.10.10");
+
+    iprintf("Application started\n");
+    adc = new ADC(ADCSPI);
 
     Pins[GPIO_PIN].function(PIN_12_GPIO);
     Pins[GPIO_PIN] = 0;
     RGPIO::SetupRGPIO();
 
+
     OSSemInit(&waitTaskStart, 0);
     OSSemInit(&PITSem, 0);
 
-    OSSimpleTaskCreate(RGPIO::gpioWaitTask, 51);
+    //OSSimpleTaskCreate(RGPIO::gpioWaitTask, 51);
 
-    iprintf("Application started\n");
     OSTimeDly(100);
+
+    adc->readAll(0);
+    OSSemPend(&adc->SPISEM, 0);
+    for(int i = 0; i < 4; i++)
+        iprintf("%2X|",ADCTable::table[i]);
+    iprintf("\r\n");
     OSSemPost(&waitTaskStart);
     while (1)
     {
-    	iprintf("Main\r\n");
+
         OSTimeDly(10);
     }
 }

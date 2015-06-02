@@ -11,6 +11,7 @@
 #include "../../../../Definitions.h"
 
 #include <dspi.h>
+#include <pins.h>
 #include "ADCTable.h"
 
 class ADC {
@@ -26,7 +27,7 @@ public:
 	inline int readAll(int position)
 	{
 		return DSPIStart(dspiChannel,NULL,&ADCTable::table[position],
-									4,&SPISEM,false,DEASSERT_AFTER_LAST);
+									4,&SPISEM,false,1);
 	}
 };
 

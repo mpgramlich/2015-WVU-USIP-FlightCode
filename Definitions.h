@@ -46,18 +46,18 @@
 	static HiResTimer* timer = HiResTimer::getHiResTimer(2);
 
 //ADC SPI
-	#define ADCTableSize 5000;
+	#define ADCTableSize 100;
 
-	#define ADCSPI 1
-	#define ADCdspiBaudRate 70000000
+	#define ADCSPI 2
+	#define ADCdspiBaudRate 10000
 	#define ADCtransferSizeBits 24
-	#define ADCChipSelects 0x00
+	#define ADCChipSelects 0x0F
 	#define ADCCSPolarityIdle 0x0E //Chip select polarity at idle
 								//ADC Idle Low 0x0E
 	#define ADCClockPolarity 0x00
 
 //DAC SPI
-	#define DACSPI 1
+	#define DACSPI 3
 	#define DACdspiBaudRate 20000000
 	#define DACtransferSizeBits 24
 	#define DACChipSelects 0x00
