@@ -76,6 +76,10 @@
 	#define SDSPI 1
 
 //PWM
-	#define PWMOutPin 13
+	#define PWMOutPin 	13
+	#define PWMOn		0
+	#define PWMOff		546
+	#define PWMInitVal	0
+	#define PWMResetVal	1365
 
 #endif /* DEFINITIONS_H_ */
