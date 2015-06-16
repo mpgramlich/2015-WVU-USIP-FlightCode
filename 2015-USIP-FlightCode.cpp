@@ -52,16 +52,9 @@ void UserMain(void * pd) {
     OSSemInit(&waitTaskStart, 0);
     OSSemInit(&PITSem, 0);
 
-    //OSSimpleTaskCreate(RGPIO::gpioWaitTask, 51);
+    PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    OSTimeDly(100);
-
-    adc->readAll(0);
-    OSSemPend(&adc->SPISEM, 0);
-    for(int i = 0; i < 4; i++)
-        iprintf("%2X|",ADCTable::table[i]);
-    iprintf("\r\n");
-    OSSemPost(&waitTaskStart);
+    //OSSemPost(&waitTaskStart);
     while (1)
     {
 

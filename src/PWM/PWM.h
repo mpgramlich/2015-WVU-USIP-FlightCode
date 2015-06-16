@@ -10,6 +10,8 @@
 
 namespace PWM
 {
+	//duty cycle = (off/reset)*100
+	//125MHz/off/2/reset = frequency
 	void initPWM(int pin, int16_t on, int16_t off, int16_t init, int16_t reset)
 	{
 		int submod = 3;
