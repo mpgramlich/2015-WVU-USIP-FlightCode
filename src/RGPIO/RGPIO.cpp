@@ -25,7 +25,7 @@ void RGPIO::gpioWaitTask(void * pd)
 	}
 }
 
-void inline RGPIO::bamaWait()
+void RGPIO::bamaWait()
 {
 	USER_ENTER_CRITICAL();
 	//heres where we disable all other experiments

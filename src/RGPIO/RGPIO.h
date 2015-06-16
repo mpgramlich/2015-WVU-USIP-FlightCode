@@ -21,7 +21,7 @@ namespace RGPIO {
 
 	void gpioWaitTask(void * pd);
 
-	void inline bamaWait();
+	void bamaWait();
 
 	void SetupRGPIO();
 

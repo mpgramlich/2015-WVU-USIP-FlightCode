@@ -38,7 +38,7 @@ void UserMain(void * pd) {
     //EnableTaskMonitor();
     EnableSmartTraps();
 
-    SysLogAddress = AsciiToIp("192.168.10.10");
+    SysLogAddress = AsciiToIp("192.168.11.10");
 
     iprintf("Application started\n");
     adc = new ADC(ADCSPI);

@@ -72,4 +72,7 @@
 	#define SYNTHCSPolarityIdle 0x0F //Chip select polarity at idle
 								//SYNTH Idle High ??
 
+//SD SPI
+	#define SDSPI 1
+
 #endif /* DEFINITIONS_H_ */
