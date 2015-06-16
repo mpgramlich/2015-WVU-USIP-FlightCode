@@ -12,6 +12,7 @@
 #include "src/comm/spi/ADC/ADC.h"
 #include "src/comm/spi/DAC/DAC.h"
 #include "src/comm/spi/Synth/Synth.h"
+#include "src/PWM/PWM.h"
 
 //globals
 OS_SEM PITSem;

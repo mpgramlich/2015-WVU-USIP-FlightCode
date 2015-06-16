@@ -75,4 +75,7 @@
 //SD SPI
 	#define SDSPI 1
 
+//PWM
+	#define PWMOutPin 13
+
 #endif /* DEFINITIONS_H_ */
