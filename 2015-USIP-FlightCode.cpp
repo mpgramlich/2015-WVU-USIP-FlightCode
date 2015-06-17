@@ -12,6 +12,7 @@
 #include "src/comm/spi/ADC/ADC.h"
 #include "src/comm/spi/DAC/DAC.h"
 #include "src/comm/spi/Synth/Synth.h"
+#include "src/comm/i2c/MCP23017.h"
 #include "src/PWM/PWM.h"
 
 //globals
@@ -34,27 +35,36 @@ const char * AppName="2015_USIP_Flight-Code";
 
 void UserMain(void * pd) {
     InitializeStack();
-    OSChangePrio(52);
+    OSChangePrio(MAIN_TASK_PRIO);
     EnableAutoUpdate();
-    //EnableTaskMonitor();
+    EnableTaskMonitor();
     EnableSmartTraps();
 
-    SysLogAddress = AsciiToIp("192.168.11.10");
+    SysLogAddress = AsciiToIp(SYSLOGIP);
 
-    iprintf("Application started\n");
+    DEBUG_PRINT_NET("Application Started\r\n");
+
     adc = new ADC(ADCSPI);
-
-    Pins[GPIO_PIN].function(PIN_12_GPIO);
-    Pins[GPIO_PIN] = 0;
-    RGPIO::SetupRGPIO();
-
 
     OSSemInit(&waitTaskStart, 0);
     OSSemInit(&PITSem, 0);
 
+    Pins[GPIO_PIN].function(PIN_12_GPIO);
+    Pins[GPIO_PIN] = 0;
+    setupTimer();
+    RGPIO::SetupRGPIO();
+
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    //OSSemPost(&waitTaskStart);
+    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    //MCP23017::testOutput();
+    for(int i = 0; i < 20; i++)
+    {
+    	MCP23017::testInput();
+    	OSTimeDly(20);
+    }
+
+    OSSemPost(&waitTaskStart);
     while (1)
     {
 

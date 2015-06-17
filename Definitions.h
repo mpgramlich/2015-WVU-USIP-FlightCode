@@ -27,7 +27,7 @@
 #include <NetworkDebug.h>
 #include <HiResTimer.h>
 
-//RGIO
+//RGPIO
 	#define GPIO_PIN 12
 	// Addresses of Rapid GPIO registers
 	#define RGPIO_BAR 0x8C000000           // Base Address Register
@@ -81,5 +81,22 @@
 	#define PWMOff		546
 	#define PWMInitVal	0
 	#define PWMResetVal	1365
+
+//I2C
+	#define MCP23017_Freq_Div 0x30
+	#define MCP23017_Bus_Add 0x20 //Bitwise OR with R/W Bit
+
+	#define DS1307FreqDiv 0x3C
+
+//Network Debugging
+	#ifdef SYSLOG_H
+	#define SYSLOGIP "192.168.11.10"
+	#define DEBUG_PRINT_NET(args...) SysLog(args)
+	#else
+	#define DEBUG_PRINT_NET(args...)
+	#endif
+
+//Task Priorities
+	#define MAIN_TASK_PRIO 52
 
 #endif /* DEFINITIONS_H_ */
