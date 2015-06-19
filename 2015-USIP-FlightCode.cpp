@@ -64,7 +64,7 @@ void UserMain(void * pd) {
     	OSTimeDly(20);
     }
 
-    OSSemPost(&waitTaskStart);
+    //OSSemPost(&waitTaskStart);
     while (1)
     {
 

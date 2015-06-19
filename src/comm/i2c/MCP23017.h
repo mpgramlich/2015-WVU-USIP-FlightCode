@@ -17,13 +17,22 @@ namespace MCP23017
 	static BYTE rxBuf[10] = {0x00};
 	//frqDiv is the system bus rate divisor that determines i2c bus speed
 	void init(BYTE frqDiv = MCP23017_Freq_Div);
+	BYTE inline pollInput(bool AnotB, BYTE* rx);
 
 	void testInput();
 	void testOutput();
+
+	BYTE inline disableM1();
+	BYTE inline disableM2();
+	BYTE inline enableM1();
+	BYTE inline enableM2();
 }
 
 #define IODIRA_VAL 0xFC //1111 1100
 #define IODIRB_VAL 0xFF //1111 1111
+
+#define MCP23017_GPIO_A 0x12
+#define MCP23017_GPIO_B 0x13
 
 // registers
 #define MCP23017_IODIRA 0x00

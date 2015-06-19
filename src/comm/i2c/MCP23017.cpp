@@ -27,6 +27,40 @@ void MCP23017::init(BYTE frqDiv)
 	DEBUG_PRINT_NET("5 %X\r\n",Master_I2CStop(10));*/
 }
 
+//modifies pointer passed in
+//returns state of bus when finished
+//recommend placing in external task to prevent bus lockups from stalling system
+BYTE inline MCP23017::pollInput(bool AnotB, BYTE* rx)
+{
+	if(AnotB)
+		rx[0] = MCP23017_GPIO_A;
+	else
+		rx[0] = MCP23017_GPIO_B;
+
+	I2CSendBuf(MCP23017_Bus_Add, rx, 1);
+	return I2CReadBuf(MCP23017_Bus_Add, rx, 1);
+}
+
+BYTE inline MCP23017::disableM1()
+{
+
+}
+
+BYTE inline MCP23017::disableM2()
+{
+
+}
+
+BYTE inline MCP23017::enableM1()
+{
+
+}
+
+BYTE inline MCP23017::enableM2()
+{
+
+}
+
 void MCP23017::testInput()
 {
 	rxBuf[0] = 0x12;
