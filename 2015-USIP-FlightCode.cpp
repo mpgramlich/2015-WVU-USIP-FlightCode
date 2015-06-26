@@ -20,7 +20,7 @@ OS_SEM PITSem;
 OS_SEM waitTaskStart;
 
 ADC* adc;
-//DAC DAC(DACSPI);
+//DAC* dac;
 //Synth Synth(SYNTHSPI);
 
 //externally linked stuff
@@ -45,6 +45,7 @@ void UserMain(void * pd) {
     DEBUG_PRINT_NET("Application Started\r\n");
 
     adc = new ADC(ADCSPI);
+    //dac = new DAC(DACSPI);
 
     OSSemInit(&waitTaskStart, 0);
     OSSemInit(&PITSem, 0);
@@ -57,12 +58,8 @@ void UserMain(void * pd) {
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
     MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
-    //MCP23017::testOutput();
-    for(int i = 0; i < 20; i++)
-    {
-    	MCP23017::testInput();
-    	OSTimeDly(20);
-    }
+
+    adc->readAll(0);
 
     //OSSemPost(&waitTaskStart);
     while (1)

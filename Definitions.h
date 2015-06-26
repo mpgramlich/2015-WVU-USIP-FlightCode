@@ -48,16 +48,16 @@
 //ADC SPI
 	#define ADCTableSize 100;
 
-	#define ADCSPI 2
-	#define ADCdspiBaudRate 10000
-	#define ADCtransferSizeBits 24
+	#define ADCSPI 1 //2
+	#define ADCdspiBaudRate 50000000
+	#define ADCtransferSizeBits 32
 	#define ADCChipSelects 0x0F
 	#define ADCCSPolarityIdle 0x0E //Chip select polarity at idle
 								//ADC Idle Low 0x0E
 	#define ADCClockPolarity 0x00
 
 //DAC SPI
-	#define DACSPI 3
+	#define DACSPI 1 //3
 	#define DACdspiBaudRate 10000
 	#define DACtransferSizeBits 24
 	#define DACChipSelects 0x00
@@ -66,14 +66,14 @@
 	#define DACClockPolarity 0x00
 
 //Synth SPI
-	#define SYNTHSPI 1
+	#define SYNTHSPI 1 //1
 	#define SYNTHdspiBaudRate 20000000
-	#define SYNTHtransferSizeBits 24
+	#define SYNTHtransferSizeBits 8
 	#define SYNTHCSPolarityIdle 0x0F //Chip select polarity at idle
 								//SYNTH Idle High ??
 
 //SD SPI
-	#define SDSPI 1
+	#define SDSPI 1 //1
 
 //PWM
 	#define PWMOutPin 	13

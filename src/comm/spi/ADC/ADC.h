@@ -24,6 +24,7 @@ public:
 
 	void ADC_Read_Task(void * data);
 
+	//position in the table
 	inline int readAll(int position)
 	{
 		return DSPIStart(dspiChannel,NULL,&ADCTable::table[position],

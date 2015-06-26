@@ -11,6 +11,7 @@
 #include "../../../../Definitions.h"
 
 #include <dspi.h>
+#include <pins.h>
 #include "DACTable.h"
 
 class DAC {
