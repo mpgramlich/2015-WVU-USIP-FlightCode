@@ -20,8 +20,8 @@ OS_SEM PITSem;
 OS_SEM waitTaskStart;
 
 ADC* adc;
-//DAC* dac;
-//Synth Synth(SYNTHSPI);
+DAC* dac;
+//Synth* synth;
 
 //externally linked stuff
 
@@ -45,7 +45,7 @@ void UserMain(void * pd) {
     DEBUG_PRINT_NET("Application Started\r\n");
 
     adc = new ADC(ADCSPI);
-    //dac = new DAC(DACSPI);
+    dac = new DAC(DACSPI);
 
     OSSemInit(&waitTaskStart, 0);
     OSSemInit(&PITSem, 0);
