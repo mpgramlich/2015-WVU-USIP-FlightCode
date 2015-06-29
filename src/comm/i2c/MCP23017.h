@@ -15,8 +15,9 @@ namespace MCP23017
 {
 	static BYTE txBuf[10] = {0x00};
 	static BYTE rxBuf[10] = {0x00};
+	static BYTE currOutRegs = 0x00;
 	//frqDiv is the system bus rate divisor that determines i2c bus speed
-	void init(BYTE frqDiv = MCP23017_Freq_Div);
+	BYTE init(BYTE frqDiv = MCP23017_Freq_Div);
 	BYTE inline pollInput(bool AnotB, BYTE* rx);
 
 	void testInput();
@@ -59,5 +60,33 @@ namespace MCP23017
 #define MCP23017_GPIOB 0x13
 #define MCP23017_OLATB 0x15
 
+BYTE inline MCP23017::disableM1()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs | 0x01;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+BYTE inline MCP23017::disableM2()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs | 0x02;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+BYTE inline MCP23017::enableM1()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs & 0xFE;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+BYTE inline MCP23017::enableM2()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs & 0xFD;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
 
 #endif /* MCP23017_H_ */

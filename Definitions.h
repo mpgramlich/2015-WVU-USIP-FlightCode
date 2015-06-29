@@ -28,6 +28,7 @@
 #include <HiResTimer.h>
 
 //RGPIO
+	#define EnableBamaTask 1.0101 //hertz of 1 ms pulse
 	#define GPIO_PIN 12
 	// Addresses of Rapid GPIO registers
 	#define RGPIO_BAR 0x8C000000           // Base Address Register
@@ -98,5 +99,6 @@
 
 //Task Priorities
 	#define MAIN_TASK_PRIO 52
+	#define BAMA_TASK_PRIO 51
 
 #endif /* DEFINITIONS_H_ */

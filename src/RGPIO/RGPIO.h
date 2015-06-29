@@ -15,7 +15,7 @@
 static volatile PWORD pRGPIO_BAR = (PWORD) RGPIO_BAR;
 
 extern OS_SEM PITSem;
-extern OS_SEM waitTaskStart;
+extern OS_SEM BamaTaskStart;
 
 namespace RGPIO {
 

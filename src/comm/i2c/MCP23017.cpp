@@ -7,7 +7,7 @@
 
 #include "MCP23017.h"
 
-void MCP23017::init(BYTE frqDiv)
+BYTE MCP23017::init(BYTE frqDiv)
 {
 
 	//Pins[29].function( PIN_29_I2C0_SDA);  // Set Pins to I2C
@@ -18,7 +18,7 @@ void MCP23017::init(BYTE frqDiv)
 	txBuf[1] = IODIRA_VAL;
 	txBuf[2] = IODIRB_VAL;
 
-	I2CSendBuf(MCP23017_Bus_Add, txBuf, 3);
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 3);
 /*
 	DEBUG_PRINT_NET("1 %X\r\n",Master_I2CStart(MCP23017_Bus_Add, I2C_START_WRITE, 10));
 	DEBUG_PRINT_NET("2 %X\r\n",Master_I2CSend(MCP23017_IODIRA, 10));
@@ -39,26 +39,6 @@ BYTE inline MCP23017::pollInput(bool AnotB, BYTE* rx)
 
 	I2CSendBuf(MCP23017_Bus_Add, rx, 1);
 	return I2CReadBuf(MCP23017_Bus_Add, rx, 1);
-}
-
-BYTE inline MCP23017::disableM1()
-{
-
-}
-
-BYTE inline MCP23017::disableM2()
-{
-
-}
-
-BYTE inline MCP23017::enableM1()
-{
-
-}
-
-BYTE inline MCP23017::enableM2()
-{
-
 }
 
 void MCP23017::testInput()

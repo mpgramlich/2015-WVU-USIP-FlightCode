@@ -9,8 +9,8 @@
 void RGPIO::gpioWaitTask(void * pd)
 {
 	iprintf("waitTask started\r\n");
-	OSSemPend(&waitTaskStart, 0);
-	InitPitOSSem(1, &PITSem, 1.0101);
+	OSSemPend(&BamaTaskStart, 0);
+	InitPitOSSem(1, &PITSem, EnableBamaTask);
 	while(1)
 	{
 		OSSemPend(&PITSem,0);
@@ -39,15 +39,22 @@ void RGPIO::bamaWait()
 
 void RGPIO::SetupRGPIO()
 {
-   // Enable processor access to the RGPIO module
-   asm(" move.l #0x8C000035,%d0");  // All bits fixed except bit 0, set to 1 to enable
-   asm(" movec %d0,#0x009");        // Use movec to write to control register
+	Pins[GPIO_PIN].function(PIN_12_GPIO);
+	Pins[GPIO_PIN] = 0;
+    // Enable processor access to the RGPIO module
+	asm(" move.l #0x8C000035,%d0");  // All bits fixed except bit 0, set to 1 to enable
+	asm(" movec %d0,#0x009");        // Use movec to write to control register
 
-   pRGPIO_BAR[RGPIO_DIR] = RGPIO_0;    // Set RGPIO to be an output
-   pRGPIO_BAR[RGPIO_ENB] = RGPIO_0;    // Enable RGPIO pin
+	pRGPIO_BAR[RGPIO_DIR] = RGPIO_0;    // Set RGPIO to be an output
+   	pRGPIO_BAR[RGPIO_ENB] = RGPIO_0;    // Enable RGPIO pin
 
-   // Set DSPI0 & One-Wire Slew Rate Control Register (SRCR_DSPIOW) to their maximum freq
-   sim1.gpio.srcr_dspiow = 0x33;
+    // Set DSPI0 & One-Wire Slew Rate Control Register (SRCR_DSPIOW) to their maximum freq
+   	sim1.gpio.srcr_dspiow = 0x33;
+
+#ifdef EnableBamaTask
+    OSSimpleTaskCreate(RGPIO::gpioWaitTask, BAMA_TASK_PRIO);
+#endif
+
 }
 
 

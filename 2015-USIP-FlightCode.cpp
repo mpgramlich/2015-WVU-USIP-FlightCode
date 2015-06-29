@@ -17,7 +17,7 @@
 
 //globals
 OS_SEM PITSem;
-OS_SEM waitTaskStart;
+OS_SEM BamaTaskStart;
 
 ADC* adc;
 DAC* dac;
@@ -47,24 +47,35 @@ void UserMain(void * pd) {
     adc = new ADC(ADCSPI);
     dac = new DAC(DACSPI);
 
-    OSSemInit(&waitTaskStart, 0);
+    OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&PITSem, 0);
 
-    Pins[GPIO_PIN].function(PIN_12_GPIO);
-    Pins[GPIO_PIN] = 0;
     setupTimer();
+
     RGPIO::SetupRGPIO();
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
-
     adc->readAll(0);
 
-    //OSSemPost(&waitTaskStart);
+    RGPIO::SetupRGPIO();
+
+    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+
+    DEBUG_PRINT_NET("1: %X\r\n", MCP23017::disableM1());
+    OSTimeDly(10);
+    DEBUG_PRINT_NET("2: %X\r\n", MCP23017::disableM2());
+    OSTimeDly(10);
+    DEBUG_PRINT_NET("3: %X\r\n", MCP23017::enableM1());
+    OSTimeDly(10);
+    DEBUG_PRINT_NET("4: %X\r\n", MCP23017::enableM2());
+    OSTimeDly(10);
+
+    DEBUG_PRINT_NET("BamaTaskStart \r\n");
+    OSSemPost(&BamaTaskStart);
+
     while (1)
     {
-
         OSTimeDly(10);
     }
 }
