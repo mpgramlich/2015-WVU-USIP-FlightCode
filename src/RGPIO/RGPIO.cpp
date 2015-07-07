@@ -14,12 +14,14 @@ void RGPIO::gpioWaitTask(void * pd)
 	while(1)
 	{
 		OSSemPend(&PITSem,0);
+		DEBUG_PRINT_NET("output\r\n");
 		USER_ENTER_CRITICAL();
 			//heres where we disable all other experiments
 		timer->pollingDelay(.002);
 		asm("nop");
 		pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-		timer->pollingDelay(.001);
+		//timer->pollingDelay(.001);
+		timer->pollingDelay(.100);
 		pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 		USER_EXIT_CRITICAL();
 	}

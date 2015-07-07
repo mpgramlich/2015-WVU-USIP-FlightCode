@@ -62,6 +62,7 @@ void UserMain(void * pd) {
 
     MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
 
+    /*
     DEBUG_PRINT_NET("1: %X\r\n", MCP23017::disableM1());
     OSTimeDly(10);
     DEBUG_PRINT_NET("2: %X\r\n", MCP23017::disableM2());
@@ -70,6 +71,7 @@ void UserMain(void * pd) {
     OSTimeDly(10);
     DEBUG_PRINT_NET("4: %X\r\n", MCP23017::enableM2());
     OSTimeDly(10);
+     */
 
     DEBUG_PRINT_NET("BamaTaskStart \r\n");
     OSSemPost(&BamaTaskStart);
