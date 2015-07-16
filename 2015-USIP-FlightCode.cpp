@@ -12,7 +12,7 @@
 #include "src/comm/spi/ADC/ADC.h"
 #include "src/comm/spi/DAC/DAC.h"
 #include "src/comm/spi/Synth/Synth.h"
-#include "src/comm/i2c/MCP23017.h"
+#include "src/comm/i2c/MCP23017/MCP23017.h"
 #include "src/comm/serial/Serial_IO.h"
 #include "src/PWM/PWM.h"
 
@@ -60,8 +60,6 @@ void UserMain(void * pd) {
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
     adc->readAll(0);
-
-    RGPIO::SetupRGPIO();
 
     MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
 

@@ -8,7 +8,7 @@
 #ifndef MCP23017_H_
 #define MCP23017_H_
 
-#include "../../../Definitions.h"
+#include "../../../../Definitions.h"
 #include <i2cmaster.h>
 
 namespace MCP23017
