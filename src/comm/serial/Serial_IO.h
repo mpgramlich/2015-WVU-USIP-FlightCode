@@ -33,11 +33,11 @@ namespace Serial_IO {
 		iprintf("Initializing Serial\n");
 	#endif
 
-//		SerialClose(2);
-//		J2[19].function(3); //TX 2
-//		J2[31].function(3); //RX 2
-//		serialFd[0] = OpenSerial(2, 115200, 1, 8, eParityNone);
-//
+		SerialClose(2);
+		Pins[13].function(3); //TX 2
+		Pins[14].function(3); //RX 2
+		serialFd[2] = OpenSerial(2, 115200, 1, 8, eParityNone);
+
 //		SerialClose(9);
 //		J2[44].function(2); //TX 9
 //		J2[41].function(2); //RX 9

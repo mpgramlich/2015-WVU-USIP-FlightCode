@@ -13,6 +13,7 @@
 #include "src/comm/spi/DAC/DAC.h"
 #include "src/comm/spi/Synth/Synth.h"
 #include "src/comm/i2c/MCP23017.h"
+#include "src/comm/serial/Serial_IO.h"
 #include "src/PWM/PWM.h"
 
 //globals
@@ -39,6 +40,8 @@ void UserMain(void * pd) {
     EnableAutoUpdate();
     EnableTaskMonitor();
     EnableSmartTraps();
+
+    Serial_IO::initSerial();
 
     SysLogAddress = AsciiToIp(SYSLOGIP);
 
@@ -76,8 +79,12 @@ void UserMain(void * pd) {
     DEBUG_PRINT_NET("BamaTaskStart \r\n");
     OSSemPost(&BamaTaskStart);
 
+    //pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
+
     while (1)
     {
+    	//char test[4] = {'t','e','s','t'};
+    	//Serial_IO::writePend(&Serial_IO::serialFd[2], test, 4);
         OSTimeDly(10);
     }
 }
