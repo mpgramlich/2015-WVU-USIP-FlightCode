@@ -29,7 +29,7 @@
 
 //RGPIO
 	//#define EnableBamaTask 1.0101 //hertz of 1 ms pulse
-	#define EnableBamaTask 1.0 //hertz of 1 ms pulse
+	//#define EnableBamaTask 1.0 //hertz of 1 ms pulse
 	#define GPIO_PIN 12
 	// Addresses of Rapid GPIO registers
 	#define RGPIO_BAR 0x8C000000           // Base Address Register
@@ -51,7 +51,8 @@
 	#define ADCTableSize 100;
 
 	#define ADCSPI 1 //2
-	#define ADCdspiBaudRate 50000000
+	//#define ADCdspiBaudRate 50000000
+	#define ADCdspiBaudRate 10000
 	#define ADCtransferSizeBits 32
 	#define ADCChipSelects 0x0F
 	#define ADCCSPolarityIdle 0x0E //Chip select polarity at idle
@@ -69,7 +70,8 @@
 
 //Synth SPI
 	#define SYNTHSPI 1 //1
-	#define SYNTHdspiBaudRate 20000000
+	//#define SYNTHdspiBaudRate 20000000
+	#define SYNTHdspiBaudRate 10000
 	#define SYNTHtransferSizeBits 8
 	#define SYNTHCSPolarityIdle 0x0F //Chip select polarity at idle
 								//SYNTH Idle High ??
@@ -85,7 +87,7 @@
 	#define PWMResetVal	1365
 
 //I2C
-	#define MCP23017_Freq_Div 0x30
+	#define MCP23017_Freq_Div 0x3F
 	#define MCP23017_Bus_Add 0x20 //Bitwise OR with R/W Bit
 
 	#define DS1307FreqDiv 0x3C
@@ -101,5 +103,6 @@
 //Task Priorities
 	#define MAIN_TASK_PRIO 52
 	#define BAMA_TASK_PRIO 51
+	#define BOOM_TASK_PRIO 50
 
 #endif /* DEFINITIONS_H_ */

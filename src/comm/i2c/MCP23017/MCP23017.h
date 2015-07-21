@@ -16,9 +16,15 @@ namespace MCP23017
 	static BYTE txBuf[10] = {0x00};
 	static BYTE rxBuf[10] = {0x00};
 	static BYTE currOutRegs = 0x00;
+	static volatile bool boomsExtended = false;
+	static volatile bool boomsRetracted = false;
+
 	//frqDiv is the system bus rate divisor that determines i2c bus speed
 	BYTE init(BYTE frqDiv = MCP23017_Freq_Div);
-	BYTE inline pollInput(bool AnotB, BYTE* rx);
+	BYTE pollInput(bool AnotB, BYTE* rx);
+
+	void extendBoomsTask(void * pd);
+	void retractBoomsTask(void * pd);
 
 	void testInput();
 	void testOutput();
@@ -27,7 +33,12 @@ namespace MCP23017
 	BYTE inline disableM2();
 	BYTE inline enableM1();
 	BYTE inline enableM2();
+	void inline retractBooms();
+	void inline extendBooms();
 }
+
+#define BOOMS_RETRACTED 0x14
+#define BOOMS_EXTENDED 0x28
 
 #define IODIRA_VAL 0xFC //1111 1100
 #define IODIRB_VAL 0xFF //1111 1111
@@ -87,6 +98,16 @@ BYTE inline MCP23017::enableM2()
 	txBuf[1] = currOutRegs & 0xFD;
 	currOutRegs = txBuf[1];
 	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+void inline MCP23017::extendBooms()
+{
+	OSSimpleTaskCreatewName(MCP23017::extendBoomsTask, BOOM_TASK_PRIO,
+								"Extend Booms Task");
+}
+void inline MCP23017::retractBooms()
+{
+	OSSimpleTaskCreatewName(MCP23017::retractBoomsTask, BOOM_TASK_PRIO,
+								"Retract Booms Task");
 }
 
 #endif /* MCP23017_H_ */

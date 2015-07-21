@@ -15,8 +15,8 @@ BYTE MCP23017::init(BYTE frqDiv)
 	I2CInit(MCP23017_Freq_Div);
 
 	txBuf[0] = MCP23017_IODIRA;
-	txBuf[1] = IODIRA_VAL;
-	txBuf[2] = IODIRB_VAL;
+	txBuf[1] = IODIRA_VAL; //set first two to output, rest to inputs
+	txBuf[2] = IODIRB_VAL; //set all to inputs
 
 	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 3);
 /*
@@ -30,7 +30,7 @@ BYTE MCP23017::init(BYTE frqDiv)
 //modifies pointer passed in
 //returns state of bus when finished
 //recommend placing in external task to prevent bus lockups from stalling system
-BYTE inline MCP23017::pollInput(bool AnotB, BYTE* rx)
+BYTE MCP23017::pollInput(bool AnotB, BYTE* rx)
 {
 	if(AnotB)
 		rx[0] = MCP23017_GPIO_A;
@@ -39,6 +39,60 @@ BYTE inline MCP23017::pollInput(bool AnotB, BYTE* rx)
 
 	I2CSendBuf(MCP23017_Bus_Add, rx, 1);
 	return I2CReadBuf(MCP23017_Bus_Add, rx, 1);
+}
+
+void MCP23017::extendBoomsTask(void * pd)
+{
+	while(!boomsExtended)
+	{
+		OSTimeDly(10);
+		pollInput(true, rxBuf);
+		if((rxBuf[0] & BOOMS_EXTENDED) == BOOMS_EXTENDED)
+		{
+			disableM1();
+			disableM2();
+			boomsExtended = true;
+			boomsRetracted = false;
+		}
+		else
+		{
+			boomsExtended = false;
+			boomsRetracted = true;
+			enableM1();
+			enableM2();
+		}
+	}
+}
+
+void MCP23017::retractBoomsTask(void * pd)
+{
+	printf("Retracting Booms");
+	boomsExtended = true;
+
+	while(boomsExtended)
+	{
+		pollInput(true, rxBuf);
+		rxBuf[0] = ~rxBuf[0];
+		if((rxBuf[0] & BOOMS_RETRACTED) == BOOMS_RETRACTED)
+		{
+			printf("1. %x", rxBuf[0]);
+			disableM1();
+			disableM2();
+			boomsExtended = false;
+			boomsRetracted = true;
+		}
+		else
+		{
+			printf("2. %X", rxBuf[0]);
+			boomsExtended = true;
+			boomsRetracted = false;
+			//enableM1();
+			enableM2();
+		}
+		OSTimeDly(4);
+	}
+	printf("Booms Retracted");
+	return;
 }
 
 void MCP23017::testInput()

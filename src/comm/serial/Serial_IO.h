@@ -34,9 +34,10 @@ namespace Serial_IO {
 	#endif
 
 		SerialClose(2);
-		Pins[13].function(3); //TX 2
-		Pins[14].function(3); //RX 2
+
+		Pins[16].function(PIN_16_UART2_TXD); //TX 2
 		serialFd[2] = OpenSerial(2, 115200, 1, 8, eParityNone);
+		Pins[13].function(PIN_13_PWM_A3); //PWM
 
 //		SerialClose(9);
 //		J2[44].function(2); //TX 9
