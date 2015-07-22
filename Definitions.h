@@ -87,7 +87,7 @@
 	#define PWMResetVal	1365
 
 //I2C
-	#define MCP23017_Freq_Div 0x3F
+	#define MCP23017_Freq_Div 0x1C
 	#define MCP23017_Bus_Add 0x20 //Bitwise OR with R/W Bit
 
 	#define DS1307FreqDiv 0x3C
@@ -103,6 +103,7 @@
 //Task Priorities
 	#define MAIN_TASK_PRIO 52
 	#define BAMA_TASK_PRIO 51
-	#define BOOM_TASK_PRIO 50
+	#define EBOOM_TASK_PRIO 50
+	#define RBOOM_TASK_PRIO 49
 
 #endif /* DEFINITIONS_H_ */

@@ -10,15 +10,15 @@
 BYTE MCP23017::init(BYTE frqDiv)
 {
 
-	//Pins[29].function( PIN_29_I2C0_SDA);  // Set Pins to I2C
-	//Pins[27].function( PIN_27_I2C0_SCL);
-	I2CInit(MCP23017_Freq_Div);
+	Pins[29].function( PIN_29_I2C0_SDA);  // Set Pins to I2C
+	Pins[27].function( PIN_27_I2C0_SCL);
+	Master_I2CInit(MCP23017_Freq_Div);
 
 	txBuf[0] = MCP23017_IODIRA;
 	txBuf[1] = IODIRA_VAL; //set first two to output, rest to inputs
 	txBuf[2] = IODIRB_VAL; //set all to inputs
 
-	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 3);
+	return Master_I2CSendBuf(MCP23017_Bus_Add, txBuf, 3);
 /*
 	DEBUG_PRINT_NET("1 %X\r\n",Master_I2CStart(MCP23017_Bus_Add, I2C_START_WRITE, 10));
 	DEBUG_PRINT_NET("2 %X\r\n",Master_I2CSend(MCP23017_IODIRA, 10));
@@ -37,69 +37,105 @@ BYTE MCP23017::pollInput(bool AnotB, BYTE* rx)
 	else
 		rx[0] = MCP23017_GPIO_B;
 
-	I2CSendBuf(MCP23017_Bus_Add, rx, 1);
-	return I2CReadBuf(MCP23017_Bus_Add, rx, 1);
+	retVal = Master_I2CSendBuf(MCP23017_Bus_Add, rx, 1);
+	if(retVal > 3)
+		return retVal;
+	return Master_I2CReadBuf(MCP23017_Bus_Add, rx, 1);
 }
 
 void MCP23017::extendBoomsTask(void * pd)
 {
-	while(!boomsExtended)
+	//OSSemPend(&ExtendBooms, 0);
+	int start = TimeTick;
+	printf("Extending Booms\r\n");
+	enableM1();
+	enableM2();
+	OSTimeDly(20*10);
+	/*
+	boomsExtended = false;
+	boomsRetracted = true;
+	bool M2 = false;
+	bool M1 = false;
+	while((!M1 || !M2) && (TimeTick - start) < 300)
 	{
-		OSTimeDly(10);
-		pollInput(true, rxBuf);
-		if((rxBuf[0] & BOOMS_EXTENDED) == BOOMS_EXTENDED)
+		if(pollInput(true, rxBuf) > 3)
+		{
+			continue;
+		}
+
+		rxBuf[0] = ~rxBuf[0];
+		if((rxBuf[0] & 0x20) == 0x20 && !M2)
+		{
+			disableM2();
+			M2 = true;
+		}
+		if((rxBuf[0] & 0x08) == 0x08 && !M1)
 		{
 			disableM1();
-			disableM2();
-			boomsExtended = true;
-			boomsRetracted = false;
+			M1 = true;
 		}
-		else
-		{
-			boomsExtended = false;
-			boomsRetracted = true;
-			enableM1();
-			enableM2();
-		}
+		printf("2. %X", rxBuf[0]);
+		//OSTimeDly(5);
 	}
+	 */
+	printf("Booms Extended\r\n");
+	boomsExtended = true;
+	boomsRetracted = false;
+	disableM1();
+	disableM2();
+	//OSSemPend(&EmptySem, 0);
+	return;
 }
 
 void MCP23017::retractBoomsTask(void * pd)
 {
-	printf("Retracting Booms");
-	boomsExtended = true;
-
-	while(boomsExtended)
+	//OSSemPend(&RetractBooms, 0);
+	int start = TimeTick;
+	printf("Retracting Booms\r\n");
+	enableM1();
+	enableM2();
+	OSTimeDly(20*10);
+	/*
+	 boomsExtended = true;
+	boomsRetracted = false;
+	bool M2 = false;
+	bool M1 = false;
+	while((!M1 || !M2) && (TimeTick - start) < 300)
 	{
-		pollInput(true, rxBuf);
+		if(pollInput(true, rxBuf) > 3)
+		{
+			continue;
+		}
 		rxBuf[0] = ~rxBuf[0];
-		if((rxBuf[0] & BOOMS_RETRACTED) == BOOMS_RETRACTED)
+		if((rxBuf[0] & 0x10) == 0x10)
 		{
-			printf("1. %x", rxBuf[0]);
-			disableM1();
 			disableM2();
-			boomsExtended = false;
-			boomsRetracted = true;
+			M2 = true;
 		}
-		else
+		if((rxBuf[0] & 0x04) == 0x04)
 		{
-			printf("2. %X", rxBuf[0]);
-			boomsExtended = true;
-			boomsRetracted = false;
-			//enableM1();
-			enableM2();
+			disableM1();
+			M1 = true;
 		}
-		OSTimeDly(4);
+		printf("2. %X", rxBuf[0]);
+		//OSTimeDly();
 	}
 	printf("Booms Retracted");
+	*/
+
+	boomsExtended = false;
+	boomsRetracted = true;
+	disableM1();
+	disableM2();
+	//OSSemPend(&EmptySem, 0);
 	return;
 }
 
 void MCP23017::testInput()
 {
 	rxBuf[0] = 0x12;
-	I2CSendBuf(MCP23017_Bus_Add, rxBuf, 1);
-	DEBUG_PRINT_NET("%X\r\n", I2CReadBuf(MCP23017_Bus_Add, rxBuf, 1));
+	Master_I2CSendBuf(MCP23017_Bus_Add, rxBuf, 1);
+	DEBUG_PRINT_NET("%X\r\n", Master_I2CReadBuf(MCP23017_Bus_Add, rxBuf, 1));
 	DEBUG_PRINT_NET("rxBuf: %X\r\n", rxBuf[0]);
 }
 
@@ -110,10 +146,10 @@ void MCP23017::testOutput()
 	for(int i = 0; i < 10; i++)
 	{
 		txBuf[1] = 0x01;
-		DEBUG_PRINT_NET("%X\r\n", I2CSendBuf(MCP23017_Bus_Add, txBuf, 2));
+		DEBUG_PRINT_NET("%X\r\n", Master_I2CSendBuf(MCP23017_Bus_Add, txBuf, 2));
 		OSTimeDly(20);
 		txBuf[1] = 0x00;
-		DEBUG_PRINT_NET("%X\r\n", I2CSendBuf(MCP23017_Bus_Add, txBuf, 2));
+		DEBUG_PRINT_NET("%X\r\n", Master_I2CSendBuf(MCP23017_Bus_Add, txBuf, 2));
 		OSTimeDly(20);
 	}
 

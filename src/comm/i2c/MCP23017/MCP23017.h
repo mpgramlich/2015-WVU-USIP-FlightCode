@@ -11,13 +11,18 @@
 #include "../../../../Definitions.h"
 #include <i2cmaster.h>
 
+extern OS_SEM ExtendBooms;
+extern OS_SEM RetractBooms;
+extern OS_SEM EmptySem;
+
 namespace MCP23017
 {
 	static BYTE txBuf[10] = {0x00};
 	static BYTE rxBuf[10] = {0x00};
 	static BYTE currOutRegs = 0x00;
 	static volatile bool boomsExtended = false;
-	static volatile bool boomsRetracted = false;
+	static volatile bool boomsRetracted = true;
+	static volatile int retVal = 0;
 
 	//frqDiv is the system bus rate divisor that determines i2c bus speed
 	BYTE init(BYTE frqDiv = MCP23017_Freq_Div);
@@ -101,12 +106,12 @@ BYTE inline MCP23017::enableM2()
 }
 void inline MCP23017::extendBooms()
 {
-	OSSimpleTaskCreatewName(MCP23017::extendBoomsTask, BOOM_TASK_PRIO,
+	OSSimpleTaskCreatewName(MCP23017::extendBoomsTask, EBOOM_TASK_PRIO,
 								"Extend Booms Task");
 }
 void inline MCP23017::retractBooms()
 {
-	OSSimpleTaskCreatewName(MCP23017::retractBoomsTask, BOOM_TASK_PRIO,
+	OSSimpleTaskCreatewName(MCP23017::retractBoomsTask, RBOOM_TASK_PRIO,
 								"Retract Booms Task");
 }
 
