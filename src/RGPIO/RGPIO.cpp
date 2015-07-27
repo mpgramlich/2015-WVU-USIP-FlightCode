@@ -8,6 +8,7 @@
 
 void RGPIO::gpioWaitTask(void * pd)
 {
+#ifdef EnableBamaTask
 	iprintf("waitTask started\r\n");
 	OSSemPend(&BamaTaskStart, 0);
 	InitPitOSSem(1, &PITSem, EnableBamaTask);
@@ -25,6 +26,7 @@ void RGPIO::gpioWaitTask(void * pd)
 		pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 		USER_EXIT_CRITICAL();
 	}
+#endif
 }
 
 void RGPIO::bamaWait()
