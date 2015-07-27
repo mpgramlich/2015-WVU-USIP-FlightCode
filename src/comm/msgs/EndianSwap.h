@@ -8,6 +8,7 @@
 #ifndef ENDIAN_SWAP_H
 #define ENDIAN_SWAP_H
 
+#include "../../../Definitions.h"
 #include <stdint.h>
 
 

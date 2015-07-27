@@ -36,13 +36,14 @@ namespace Serial_IO {
 		SerialClose(2);
 
 		Pins[16].function(PIN_16_UART2_TXD); //TX 2
+		Pins[13].function(PIN_13_UART2_RXD); //PWM
 		serialFd[2] = OpenSerial(2, 115200, 1, 8, eParityNone);
 		Pins[13].function(PIN_13_PWM_A3); //PWM
 
-//		SerialClose(9);
+		SerialClose(9);
 //		J2[44].function(2); //TX 9
 //		J2[41].function(2); //RX 9
-//		serialFd[1] = OpenSerial(9, 115200, 1, 8, eParityNone);
+		serialFd[6] = OpenSerial(9, 115200, 1, 8, eParityNone);
 
 	#ifdef DEBUG_SERIAL_IO__
 		iprintf("Leaving Serial Init\n");

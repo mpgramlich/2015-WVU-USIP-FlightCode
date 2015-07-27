@@ -60,7 +60,7 @@
 	#define ADCClockPolarity 0x00
 
 //DAC SPI
-	#define DACSPI 1 //3
+	#define DACSPI 3 //3
 	#define DACdspiBaudRate 10000
 	#define DACtransferSizeBits 24
 	#define DACChipSelects 0x00
@@ -105,5 +105,6 @@
 	#define BAMA_TASK_PRIO 51
 	#define EBOOM_TASK_PRIO 50
 	#define RBOOM_TASK_PRIO 49
+	#define COMM_WRITE_TASK_PRIO 48
 
 #endif /* DEFINITIONS_H_ */

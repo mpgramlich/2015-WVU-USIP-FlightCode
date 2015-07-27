@@ -120,9 +120,9 @@ void MCP23017::retractBoomsTask(void * pd)
 		printf("2. %X", rxBuf[0]);
 		//OSTimeDly();
 	}
-	printf("Booms Retracted");
-	*/
 
+	*/
+	printf("Booms Retracted");
 	boomsExtended = false;
 	boomsRetracted = true;
 	disableM1();

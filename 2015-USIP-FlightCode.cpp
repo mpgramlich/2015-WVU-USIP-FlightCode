@@ -14,6 +14,7 @@
 #include "src/comm/spi/Synth/Synth.h"
 #include "src/comm/i2c/MCP23017/MCP23017.h"
 #include "src/comm/serial/Serial_IO.h"
+#include "src/comm/serial/Comm.h"
 #include "src/PWM/PWM.h"
 
 //globals
@@ -22,6 +23,7 @@ OS_SEM BamaTaskStart;
 OS_SEM ExtendBooms;
 OS_SEM RetractBooms;
 OS_SEM EmptySem; //tasks that are done pend on this forever,
+OS_SEM DataSem;
 
 ADC* adc;
 DAC* dac;
@@ -29,6 +31,9 @@ DAC* dac;
 
 static bool TP70 = false;
 static bool TP380 = false;
+
+DataMsg::bigEndianMsg_t datamsg;
+DataMsg::littleEndianData_t datamsgl;
 
 //externally linked stuff
 
@@ -51,7 +56,7 @@ void UserMain(void * pd) {
 
     Serial_IO::initSerial();
 
-    ReplaceStdio(1, Serial_IO::serialFd[2]);
+    Comm::startCommTask();
 
     SysLogAddress = AsciiToIp(SYSLOGIP);
 
@@ -59,10 +64,12 @@ void UserMain(void * pd) {
 
     adc = new ADC(ADCSPI);
     dac = new DAC(DACSPI);
+
+
     //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
-    OSSemInit(&PITSem, 0);
+
     OSSemInit(&EmptySem, 0);
     OSSemInit(&ExtendBooms, 0);
     OSSemInit(&RetractBooms, 0);
@@ -132,7 +139,10 @@ void UserMain(void * pd) {
     MCP23017::retractBoomsTask(0);
 */
     int count = 0;
-    while (1)
+
+    InitPitOSSem(2, &PITSem, 20);
+    bool test = true;
+    while (test)
     {
     	if(count == 0 && Pins[9].read())
     	{
@@ -147,8 +157,9 @@ void UserMain(void * pd) {
     		printf("Payload Deactivated");
     		MCP23017::retractBoomsTask(0);
     		//OSSemPost(&RetractBooms);
+    		test = false;
     	}
-        OSTimeDly(10);
+        //OSTimeDly(10);
     }
 }
 

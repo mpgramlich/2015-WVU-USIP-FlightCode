@@ -27,6 +27,7 @@ Include this header and write to msg below, send data by using the
 	struct __attribute__((packed)) msg_t
 	{
 		uint32_t H1;
+		uint8_t counter;
 		uint8_t experimentRunning; //0 idle
 		uint32_t clock_reg_count;
 		uint32_t clock_reg_reset_count;
@@ -38,6 +39,7 @@ Include this header and write to msg below, send data by using the
 	 union bigEndianMsg_t {
 		msg_t msg;
 		BYTE data[size+3];
+		char dataC[size+3];
 	};
 
 	 union littleEndianData_t {
