@@ -24,7 +24,7 @@ ADC::ADC(int dspiChannelInput) {
 	OSSemInit(&SPISEM, 0);
 
 	DSPIInit(dspiChannel, ADCdspiBaudRate, ADCtransferSizeBits, ADCChipSelects,
-			 ADCCSPolarityIdle, ADCClockPolarity, 1, 1, 0, 0);
+			 ADCCSPolarityIdle, ADCClockPolarity, 1, 1, 0, 0, false);
 
 }
 

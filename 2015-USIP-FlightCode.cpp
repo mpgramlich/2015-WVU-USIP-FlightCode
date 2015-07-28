@@ -27,7 +27,7 @@ OS_SEM DataSem;
 
 ADC* adc;
 DAC* dac;
-//Synth* synth;
+Synth* synth;
 
 static bool TP70 = false;
 static bool TP380 = false;
@@ -62,14 +62,11 @@ void UserMain(void * pd) {
 
     DEBUG_PRINT_NET("Application Started\r\n");
 
-    adc = new ADC(ADCSPI);
-    dac = new DAC(DACSPI);
-
-
-    //synth = new Synth(SYNTHSPI);
+    //adc = new ADC(ADCSPI);
+    //dac = new DAC(DACSPI);
+    synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
-
     OSSemInit(&EmptySem, 0);
     OSSemInit(&ExtendBooms, 0);
     OSSemInit(&RetractBooms, 0);
@@ -81,87 +78,12 @@ void UserMain(void * pd) {
     MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
     MCP23017::disableM1();
     MCP23017::disableM2();
-    //MCP23017::extendBooms();
-    //MCP23017::retractBooms();
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    //adc->readAll(0);
-
-
-    Pins[9] = 0;
-    Pins[9].function(PIN_9_IRQ7);
-    //ConfigureIrq7(0, &ExperimentStartISR);
-    Pins[9].function(PIN_9_GPIO);
-
-    //DEBUG_PRINT_NET("BamaTaskStart \r\n");
-    //OSSemPost(&BamaTaskStart);
-
-    //pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-
-    //MCP23017::extendBooms();
-
-/*
-    union
-    {
-    	BYTE rx_t;
-    	char rxtest;
-    };
-    BYTE temp = 0;
-    bool od = true;
-    bool td = true;
-
-    while(od & td)
-    {
-        MCP23017::pollInput(true, &rx_t);
-        temp = rx_t;
-        temp &= 0x30;
-        if((temp & 0x10) == 0x10)
-        	od = true;
-        else
-        	od = false;
-        if((temp & 0x20) == 0x20)
-        	td = true;
-        else
-        	td = false;
-        MCP23017::enableM2();
-        printf("%X\r\n", rxtest);
-        Serial_IO::writePend(&Serial_IO::serialFd[2], &rxtest, 1);
-        //write(Serial_IO::serialFd[2], &rxtest, 1);
-    }
-    MCP23017::disableM2();*/
-/*
-    if(Pins[9].read())
-    {
-    	printf("Payload Activated\r\n");
-    	MCP23017::extendBoomsTask(0);
-    }
-    MCP23017::retractBoomsTask(0);
-*/
-    int count = 0;
-
-    InitPitOSSem(2, &PITSem, 20);
-    bool test = true;
-    while (test)
-    {
-
-    	if(count == 0 && Pins[9].read())
-    	{
-    		count++;
-    		printf("Payload Activated");
-    		MCP23017::extendBoomsTask(0);
-    		//OSSemPost(&ExtendBooms);
-    	}
-    	if(count >= 1 && !Pins[9].read())  /* && MCP23017::boomsExtended*/
-    	{
-    		count++;
-    		printf("Payload Deactivated");
-    		MCP23017::retractBoomsTask(0);
-    		//OSSemPost(&RetractBooms);
-    		test = false;
-    	}
-        //OSTimeDly(10);
-    }
+    printf("Before Output\n");
+    synth->testOutput();
+    printf("After Output\n");
 }
 
 void ExperimentStartISR()
