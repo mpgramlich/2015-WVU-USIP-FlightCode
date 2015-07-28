@@ -41,7 +41,6 @@ extern DataMsg::littleEndianData_t datamsgl;
 
 namespace Comm
 {
-
 	//DWORD commStack[USER_TASK_STK_SIZE];
 
 	//simple version of write task that only requires a function call to run
@@ -57,5 +56,6 @@ namespace Comm
 
 
 }
+
 
 #endif /* COMM_H_ */

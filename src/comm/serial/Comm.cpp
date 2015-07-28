@@ -8,6 +8,7 @@
 #include "Comm.h"
 
 extern OS_SEM PITSem;
+extern int Serial_IO::serialFd[6];
 
 //See Serial_IO.h, initSerial for indexes
 //#define SERIAL_INDEX_UART9 serialFd[1]
@@ -76,7 +77,7 @@ void Comm::commWriteTask(void* inputArg)
 		OSSemPend(&PITSem, 100);
 
 		//try to take semaphore for message to avoid half-write-read conditions
-		OSSemPend(&DataSem, 100);
+		//OSSemPend(&DataSem, 100);
 
 		
 		//this changes the endian of the message to little endian
@@ -96,6 +97,7 @@ void Comm::commWriteTask(void* inputArg)
 																	&DataMsg::size);
 
 		//write the little endian data
+		//printf("\nComm Serial 2 FD: %X\n", &Serial_IO::serialFd[2]);
 		Serial_IO::writePend(&Serial_IO::serialFd[2],
 				datamsg.dataC, DataMsg::size);
 
