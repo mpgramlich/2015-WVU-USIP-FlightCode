@@ -70,8 +70,8 @@
 
 //Synth SPI
 	#define SYNTHSPI 1 //1
-	//#define SYNTHdspiBaudRate 20000000
-	#define SYNTHdspiBaudRate 10000
+	#define SYNTHdspiBaudRate 20000000
+	//#define SYNTHdspiBaudRate 10000000
 	#define SYNTHtransferSizeBits 8
 	#define SYNTHCS 0xFE
 	#define SYNTHCSPolarityIdle 0x1 //Chip select polarity at idle
