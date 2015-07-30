@@ -62,9 +62,9 @@ void UserMain(void * pd) {
 
     DEBUG_PRINT_NET("Application Started\r\n");
 
-    //adc = new ADC(ADCSPI);
+    adc = new ADC(ADCSPI);
     //dac = new DAC(DACSPI);
-    synth = new Synth(SYNTHSPI);
+    //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&EmptySem, 0);
@@ -81,9 +81,40 @@ void UserMain(void * pd) {
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    printf("Before Output\n");
-    synth->testOutput();
-    printf("After Output\n");
+    //printf("Before Output\n");
+    //synth->testOutput();
+    //printf("After Output\n");
+    union
+    {
+    	uint32_t raw;
+    	char rawchar[4];
+    };
+
+    iprintf("Starting Transfer\n");
+    USER_ENTER_CRITICAL();
+   // for(int i = 0; i < 5000; i += 3)
+    {
+    	adc->readAll(0);
+    	OSSemPend(&adc->SPISEM, 0);
+    }
+    USER_EXIT_CRITICAL();
+
+    for(int i = 0; i < 5000; i+=3)
+    {
+    	double volts = 0.0;
+    	int32_t actual = 0;
+    	//printf("%2X, ", adc->table[i]);
+    	rawchar[2] = adc->table[i];
+    	rawchar[3] = adc->table[i+1];
+    	raw = ((raw<<2)|(0x03&(adc->table[i+2]>>6)));
+    	actual = raw;
+    	if(raw >= 0x20000)
+    	{
+    		actual -= 0x3fffff;
+    	}
+    	volts = (double)actual * 0.000034332275390625;
+    	printf("%3.8f\n", volts);
+    }
 }
 
 void ExperimentStartISR()
