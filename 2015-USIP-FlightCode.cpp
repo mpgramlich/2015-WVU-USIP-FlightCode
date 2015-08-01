@@ -63,8 +63,8 @@ void UserMain(void * pd) {
     DEBUG_PRINT_NET("Application Started\r\n");
 
     adc = new ADC(ADCSPI);
-    //dac = new DAC(DACSPI);
-    //synth = new Synth(SYNTHSPI);
+    dac = new DAC(DACSPI);
+    synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&EmptySem, 0);
@@ -81,9 +81,19 @@ void UserMain(void * pd) {
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
+
+
+
+
+
+
+
+
+
     //printf("Before Output\n");
     //synth->testOutput();
     //printf("After Output\n");
+    /*
     union
     {
     	uint32_t raw;
@@ -115,6 +125,7 @@ void UserMain(void * pd) {
     	volts = (double)actual * 0.000034332275390625;
     	printf("%3.8f\n", volts);
     }
+    */
 }
 
 void ExperimentStartISR()
