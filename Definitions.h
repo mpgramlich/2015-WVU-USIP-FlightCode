@@ -61,9 +61,9 @@
 
 //DAC SPI
 	#define DACSPI 3 //3
-	#define DACdspiBaudRate 10000
+	#define DACdspiBaudRate 40000000
 	#define DACtransferSizeBits 8
-	#define DACChipSelects 0xFF
+	#define DACChipSelects 0xFE
 	#define DACCSPolarityIdle 0x01 //Chip select polarity at idle
 								//DAC Idle High 0x0F
 	#define DACClockPolarity 0x00

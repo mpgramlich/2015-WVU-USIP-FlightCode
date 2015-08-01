@@ -22,7 +22,7 @@ DAC::DAC(int dspiChannelInput) {
 	OSSemInit(&SPISEM, 0);
 
 	DSPIInit(dspiChannel, DACdspiBaudRate, DACtransferSizeBits, DACChipSelects,
-			 DACCSPolarityIdle, DACClockPolarity, 1, 1, 5, 5, false);
+			 DACCSPolarityIdle, DACClockPolarity, 1, 1, 1, 1, false);
 
 }
 

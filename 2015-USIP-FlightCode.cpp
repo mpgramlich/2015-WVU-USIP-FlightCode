@@ -55,6 +55,7 @@ void UserMain(void * pd) {
     EnableSmartTraps();
 
     Serial_IO::initSerial();
+    ReplaceStdio(0, Serial_IO::serialFd[2]);
 
     Comm::startCommTask();
 
@@ -82,12 +83,23 @@ void UserMain(void * pd) {
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
 
+    //iprintf("Before Output\n");
+    OSTimeDly(20);
+    //DACTable::currentPlace = DACTable::size/2;
+    DACTable::currentPlace = DACTable::size/4;
+    dac->writePos(DACTable::currentPlace, 3);
+    OSTimeDly(100);
+    for(int i = 0; i < 10000; i ++)
+    {
+    for(DACTable::currentPlace = 0; DACTable::currentPlace < DACTable::size; DACTable::currentPlace += 3)
+    {
+    	dac->writePos(DACTable::currentPlace, 3);
+    	//OSSemPend(&dac->SPISEM, 0);
+    	//OSTimeDly(5);
+    }
+    }
 
-
-
-
-
-
+    //printf("After Output\n");
 
 
     //printf("Before Output\n");
