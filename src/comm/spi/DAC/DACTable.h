@@ -12,11 +12,11 @@
 
 namespace DACTable
 {
-	const int size = 2388;
+	const int size = 720;
+	extern BYTE zeroVoltage[3] __attribute__ ((aligned(2)));
 
 	extern int currentPlace;
 	extern BYTE table[size] __attribute__ ((aligned(2)));
 }
-
 
 #endif /* DACTABLE_H_ */

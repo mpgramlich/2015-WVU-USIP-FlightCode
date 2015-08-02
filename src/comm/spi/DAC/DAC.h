@@ -30,6 +30,12 @@ public:
 		return DSPIStart(dspiChannel, &DACTable::table[positionInTable], NULL,
 							3, &SPISEM, false, DEASSERT_AFTER_LAST, FALSE);
 	}
+
+	inline int zeroDacOutput()
+	{
+		return DSPIStart(dspiChannel, DACTable::zeroVoltage, NULL,
+		        			3, &SPISEM, false, DEASSERT_AFTER_LAST, FALSE);
+	}
 };
 
 #endif /* DAC_H_ */

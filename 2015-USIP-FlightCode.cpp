@@ -29,13 +29,11 @@ ADC* adc;
 DAC* dac;
 Synth* synth;
 
+//externally linked stuff
 static bool TP70 = false;
 static bool TP380 = false;
-
 DataMsg::bigEndianMsg_t datamsg;
 DataMsg::littleEndianData_t datamsgl;
-
-//externally linked stuff
 
 extern "C" {
 void UserMain(void * pd);
@@ -57,15 +55,15 @@ void UserMain(void * pd) {
     Serial_IO::initSerial();
     ReplaceStdio(0, Serial_IO::serialFd[2]);
 
-    Comm::startCommTask();
+    //Comm::startCommTask();
 
-    SysLogAddress = AsciiToIp(SYSLOGIP);
+    //SysLogAddress = AsciiToIp(SYSLOGIP);
 
     DEBUG_PRINT_NET("Application Started\r\n");
 
-    adc = new ADC(ADCSPI);
+    //adc = new ADC(ADCSPI);
     dac = new DAC(DACSPI);
-    synth = new Synth(SYNTHSPI);
+    //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&EmptySem, 0);
@@ -74,33 +72,32 @@ void UserMain(void * pd) {
 
     SetupTimer();
 
-    RGPIO::SetupRGPIO();
+    //RGPIO::SetupRGPIO();
 
-    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
-    MCP23017::disableM1();
-    MCP23017::disableM2();
+    //MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    //MCP23017::disableM1();
+    //MCP23017::disableM2();
 
-    PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
+    //PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
 
-    //iprintf("Before Output\n");
+
     OSTimeDly(20);
-    //DACTable::currentPlace = DACTable::size/2;
-    DACTable::currentPlace = DACTable::size/4;
-    dac->writePos(DACTable::currentPlace, 3);
+
+    dac->zeroDacOutput();
+
     OSTimeDly(100);
-    for(int i = 0; i < 10000; i ++)
+    for(int i = 0; i < 1000000; i ++)
     {
-    for(DACTable::currentPlace = 0; DACTable::currentPlace < DACTable::size; DACTable::currentPlace += 3)
-    {
-    	dac->writePos(DACTable::currentPlace, 3);
-    	//OSSemPend(&dac->SPISEM, 0);
-    	//OSTimeDly(5);
-    }
+		for(DACTable::currentPlace = 0; DACTable::currentPlace < DACTable::size; DACTable::currentPlace += 3)
+		{
+			dac->writePos(DACTable::currentPlace, 3);
+			//OSSemPend(&dac->SPISEM, 0);
+			//OSTimeDly(5);
+		}
     }
 
-    //printf("After Output\n");
-
+    dac->zeroDacOutput();
 
     //printf("Before Output\n");
     //synth->testOutput();

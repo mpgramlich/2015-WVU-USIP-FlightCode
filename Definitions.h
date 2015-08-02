@@ -67,6 +67,7 @@
 	#define DACCSPolarityIdle 0x01 //Chip select polarity at idle
 								//DAC Idle High 0x0F
 	#define DACClockPolarity 0x00
+	#define DACZeroVoltage
 
 //Synth SPI
 	#define SYNTHSPI 1 //1
