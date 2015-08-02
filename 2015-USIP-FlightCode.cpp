@@ -32,11 +32,9 @@ Synth* synth;
 //externally linked stuff
 static bool TP70 = false;
 static bool TP380 = false;
-DataMsg::bigEndianMsg_t datamsg;
-DataMsg::littleEndianData_t datamsgl;
 
 extern "C" {
-void UserMain(void * pd);
+	void UserMain(void * pd);
 }
 
 void ConfigureIrq7( int polarity, void ( *func )( void ) );
