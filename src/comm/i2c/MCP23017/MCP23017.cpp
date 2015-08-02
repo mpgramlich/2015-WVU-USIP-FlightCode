@@ -7,6 +7,13 @@
 
 #include "MCP23017.h"
 
+BYTE MCP23017::txBuf[10] = {0x00};
+BYTE MCP23017::rxBuf[10] = {0x00};
+BYTE MCP23017::currOutRegs = 0x00;
+volatile bool MCP23017::boomsExtended = false;
+volatile bool MCP23017::boomsRetracted = true;
+volatile  int MCP23017::retVal = 0;
+
 BYTE MCP23017::init(BYTE frqDiv)
 {
 
@@ -24,7 +31,8 @@ BYTE MCP23017::init(BYTE frqDiv)
 	DEBUG_PRINT_NET("2 %X\r\n",Master_I2CSend(MCP23017_IODIRA, 10));
 	DEBUG_PRINT_NET("3 %X\r\n",Master_I2CSend(IODIRA_VAL, 10));
 	DEBUG_PRINT_NET("4 %X\r\n",Master_I2CSend(IODIRB_VAL, 10));
-	DEBUG_PRINT_NET("5 %X\r\n",Master_I2CStop(10));*/
+	DEBUG_PRINT_NET("5 %X\r\n",Master_I2CStop(10));
+*/
 }
 
 //modifies pointer passed in

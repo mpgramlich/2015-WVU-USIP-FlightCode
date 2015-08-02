@@ -17,12 +17,12 @@ extern OS_SEM EmptySem;
 
 namespace MCP23017
 {
-	static BYTE txBuf[10] = {0x00};
-	static BYTE rxBuf[10] = {0x00};
-	static BYTE currOutRegs = 0x00;
-	static volatile bool boomsExtended = false;
-	static volatile bool boomsRetracted = true;
-	static volatile int retVal = 0;
+	extern BYTE txBuf[10];
+	extern BYTE rxBuf[10];
+	extern BYTE currOutRegs;
+	extern volatile bool boomsExtended;
+	extern volatile bool boomsRetracted;
+	extern volatile int retVal;
 
 	//frqDiv is the system bus rate divisor that determines i2c bus speed
 	BYTE init(BYTE frqDiv = MCP23017_Freq_Div);

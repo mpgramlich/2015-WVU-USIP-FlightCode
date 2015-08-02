@@ -36,13 +36,13 @@ Include this header and write to msg below, send data by using the
 
 	const int size = sizeof(msg_t);
 
-	 union bigEndianMsg_t {
+	union bigEndianMsg_t {
 		msg_t msg;
 		BYTE data[size+3];
 		char dataC[size+3];
 	};
 
-	 union littleEndianData_t {
+	union littleEndianData_t {
 		BYTE littleEndianData[size+3];
 		char littleEndianDataChar[size+3];
 	};

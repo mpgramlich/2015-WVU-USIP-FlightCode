@@ -11,7 +11,13 @@
 #include "../../../../Definitions.h"
 
 #include <dspi.h>
+#include <pins.h>
 #include "SynthTable.h"
+
+
+//refclock = 125MHz
+//freqOut = 32BitWord * Refclock / 2^32
+//32BitWord = (freqOut / refClock) * 2^32
 
 class Synth {
 public:
@@ -22,6 +28,13 @@ public:
 	virtual ~Synth();
 
 	void Synth_Read_Task(void * data);
+
+	void testOutput();
+
+	inline uint32_t genTestWord(double freq)
+	{
+		return freq * 4294967296.0 / 125000000;
+	}
 };
 
 #endif /* SYNTH_H_ */

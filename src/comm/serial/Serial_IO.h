@@ -19,7 +19,7 @@
 #endif
 
 namespace Serial_IO {
-	static int serialFd[6];
+	extern int serialFd[6];
 
 	//void startSerialReadTask();
 	void serialReadTask(void * pd);
@@ -38,12 +38,14 @@ namespace Serial_IO {
 		Pins[16].function(PIN_16_UART2_TXD); //TX 2
 		Pins[13].function(PIN_13_UART2_RXD); //PWM
 		serialFd[2] = OpenSerial(2, 115200, 1, 8, eParityNone);
+		printf("\nInit Serial 2 FD: %d\n", serialFd[2]);
 		Pins[13].function(PIN_13_PWM_A3); //PWM
+		printf("\nInit Serial 2 FD: %d\n", serialFd[2]);
 
 		SerialClose(9);
 //		J2[44].function(2); //TX 9
 //		J2[41].function(2); //RX 9
-		serialFd[6] = OpenSerial(9, 115200, 1, 8, eParityNone);
+//		serialFd[6] = OpenSerial(9, 115200, 1, 8, eParityNone);
 
 	#ifdef DEBUG_SERIAL_IO__
 		iprintf("Leaving Serial Init\n");
@@ -61,6 +63,7 @@ namespace Serial_IO {
 		//writeall returns length if succesful
 		//or negative if error,
 		//TODO do something on error?
+		//printf("\nSerial 2 FD: %d\n", *fileDesc);
 		return writeall(*fileDesc, data, length);
 	#endif
 

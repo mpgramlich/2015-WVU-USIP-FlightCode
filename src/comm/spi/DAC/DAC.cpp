@@ -18,13 +18,11 @@ DAC::DAC(int dspiChannelInput) {
 	Pins[SPIPins[(dspiChannelInput - 1) * 4 + 3]].function(1); //SPI clock
 
 	dspiChannel = dspiChannelInput;
-	for (int i = 0; i < DACTable::size; i++)
-		DACTable::table[i] = 0;
 
 	OSSemInit(&SPISEM, 0);
 
 	DSPIInit(dspiChannel, DACdspiBaudRate, DACtransferSizeBits, DACChipSelects,
-			 DACCSPolarityIdle, DACClockPolarity, 1, 1, 5, 5);
+			 DACCSPolarityIdle, DACClockPolarity, 1, 1, 1, 1, false);
 
 }
 

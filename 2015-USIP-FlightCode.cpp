@@ -27,18 +27,14 @@ OS_SEM DataSem;
 
 ADC* adc;
 DAC* dac;
-//Synth* synth;
+Synth* synth;
 
+//externally linked stuff
 static bool TP70 = false;
 static bool TP380 = false;
 
-DataMsg::bigEndianMsg_t datamsg;
-DataMsg::littleEndianData_t datamsgl;
-
-//externally linked stuff
-
 extern "C" {
-void UserMain(void * pd);
+	void UserMain(void * pd);
 }
 
 void ConfigureIrq7( int polarity, void ( *func )( void ) );
@@ -55,112 +51,88 @@ void UserMain(void * pd) {
     EnableSmartTraps();
 
     Serial_IO::initSerial();
+    ReplaceStdio(0, Serial_IO::serialFd[2]);
 
-    Comm::startCommTask();
+    //Comm::startCommTask();
 
-    SysLogAddress = AsciiToIp(SYSLOGIP);
+    //SysLogAddress = AsciiToIp(SYSLOGIP);
 
     DEBUG_PRINT_NET("Application Started\r\n");
 
-    adc = new ADC(ADCSPI);
+    //adc = new ADC(ADCSPI);
     dac = new DAC(DACSPI);
-
-
     //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
-
     OSSemInit(&EmptySem, 0);
     OSSemInit(&ExtendBooms, 0);
     OSSemInit(&RetractBooms, 0);
 
     SetupTimer();
 
-    RGPIO::SetupRGPIO();
+    //RGPIO::SetupRGPIO();
 
-    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
-    MCP23017::disableM1();
-    MCP23017::disableM2();
-    //MCP23017::extendBooms();
-    //MCP23017::retractBooms();
+    //MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    //MCP23017::disableM1();
+    //MCP23017::disableM2();
 
-    PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
-
-    //adc->readAll(0);
+    //PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
 
-    Pins[9] = 0;
-    Pins[9].function(PIN_9_IRQ7);
-    //ConfigureIrq7(0, &ExperimentStartISR);
-    Pins[9].function(PIN_9_GPIO);
 
-    //DEBUG_PRINT_NET("BamaTaskStart \r\n");
-    //OSSemPost(&BamaTaskStart);
+    OSTimeDly(20);
 
-    //pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
+    dac->zeroDacOutput();
 
-    //MCP23017::extendBooms();
+    OSTimeDly(100);
+    for(int i = 0; i < 1000000; i ++)
+    {
+		for(DACTable::currentPlace = 0; DACTable::currentPlace < DACTable::size; DACTable::currentPlace += 3)
+		{
+			dac->writePos(DACTable::currentPlace, 3);
+			//OSSemPend(&dac->SPISEM, 0);
+			//OSTimeDly(5);
+		}
+    }
 
-/*
+    dac->zeroDacOutput();
+
+    //printf("Before Output\n");
+    //synth->testOutput();
+    //printf("After Output\n");
+    /*
     union
     {
-    	BYTE rx_t;
-    	char rxtest;
+    	uint32_t raw;
+    	char rawchar[4];
     };
-    BYTE temp = 0;
-    bool od = true;
-    bool td = true;
 
-    while(od & td)
+    iprintf("Starting Transfer\n");
+    USER_ENTER_CRITICAL();
+   // for(int i = 0; i < 5000; i += 3)
     {
-        MCP23017::pollInput(true, &rx_t);
-        temp = rx_t;
-        temp &= 0x30;
-        if((temp & 0x10) == 0x10)
-        	od = true;
-        else
-        	od = false;
-        if((temp & 0x20) == 0x20)
-        	td = true;
-        else
-        	td = false;
-        MCP23017::enableM2();
-        printf("%X\r\n", rxtest);
-        Serial_IO::writePend(&Serial_IO::serialFd[2], &rxtest, 1);
-        //write(Serial_IO::serialFd[2], &rxtest, 1);
+    	adc->readAll(0);
+    	OSSemPend(&adc->SPISEM, 0);
     }
-    MCP23017::disableM2();*/
-/*
-    if(Pins[9].read())
-    {
-    	printf("Payload Activated\r\n");
-    	MCP23017::extendBoomsTask(0);
-    }
-    MCP23017::retractBoomsTask(0);
-*/
-    int count = 0;
+    USER_EXIT_CRITICAL();
 
-    InitPitOSSem(2, &PITSem, 20);
-    bool test = true;
-    while (test)
+    for(int i = 0; i < 5000; i+=3)
     {
-    	if(count == 0 && Pins[9].read())
+    	double volts = 0.0;
+    	int32_t actual = 0;
+    	//printf("%2X, ", adc->table[i]);
+    	rawchar[2] = adc->table[i];
+    	rawchar[3] = adc->table[i+1];
+    	raw = ((raw<<2)|(0x03&(adc->table[i+2]>>6)));
+    	actual = raw;
+    	if(raw >= 0x20000)
     	{
-    		count++;
-    		printf("Payload Activated");
-    		MCP23017::extendBoomsTask(0);
-    		//OSSemPost(&ExtendBooms);
+    		actual -= 0x3fffff;
     	}
-    	if(count >= 1 && !Pins[9].read())  /* && MCP23017::boomsExtended*/
-    	{
-    		count++;
-    		printf("Payload Deactivated");
-    		MCP23017::retractBoomsTask(0);
-    		//OSSemPost(&RetractBooms);
-    		test = false;
-    	}
-        //OSTimeDly(10);
+    	volts = (double)actual * 0.000034332275390625;
+    	printf("%3.8f\n", volts);
     }
+    */
 }
 
 void ExperimentStartISR()

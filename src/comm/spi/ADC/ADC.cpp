@@ -9,6 +9,8 @@
 
 ADC::ADC(int dspiChannelInput) {
 
+
+
 	int SPIPins[12] = { 33, 35, 15, 31,  //SPI1
 						24, 26, 28, 30,  //SPI2
 						32, 34, 36, 38}; //SPI3
@@ -18,13 +20,13 @@ ADC::ADC(int dspiChannelInput) {
 	Pins[SPIPins[(dspiChannelInput - 1) * 4 + 3]].function(1); //SPI clock
 
 	dspiChannel = dspiChannelInput;
-	for (int i = 0; i < ADCTable::size; i++)
-		ADCTable::table[i] = 0;
+	for (int i = 0; i < size; i++)
+		table[i] = 0;
 
 	OSSemInit(&SPISEM, 0);
 
 	DSPIInit(dspiChannel, ADCdspiBaudRate, ADCtransferSizeBits, ADCChipSelects,
-			 ADCCSPolarityIdle, ADCClockPolarity, 1, 1, 0, 0);
+			 ADCCSPolarityIdle, ADCClockPolarity, 1, 1, 100, 0, false);
 
 }
 
