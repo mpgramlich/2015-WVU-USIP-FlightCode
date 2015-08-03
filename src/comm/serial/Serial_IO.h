@@ -13,70 +13,59 @@
 #include <iosys.h>
 #include <serial.h>
 #include <pins.h>
+#include "../msgs/Mailbox-msg.h"
 
 #ifdef DEBUG_SERIAL_IO__
 #include <stdio.h>
 #endif
 
-namespace Serial_IO {
-	extern int serialFd[6];
+#define QUEUE_SIZE 100
 
-	//void startSerialReadTask();
-	void serialReadTask(void * pd);
+namespace Serial_IO
+{
+	extern void * queueData[QUEUE_SIZE];
+	extern OS_Q SerialQueue;
+	extern int serialFd[9];
 
 	int SerialRxFlush(int fd);
+	void SerialWriteTask(void * pd);
+	int StartSerialWriteTask();
+
+	inline BYTE postToQueue(void * msg)
+	{
+		return OSQPost( &SerialQueue, msg);
+	}
 
 	inline void initSerial()
 	{
-
-	#ifdef DEBUG_SERIAL_IO__
+#ifdef DEBUG_SERIAL_IO__
 		iprintf("Initializing Serial\n");
-	#endif
+#endif
+		SerialClose(0);
+		SerialClose(1);
 
 		SerialClose(2);
-
 		Pins[16].function(PIN_16_UART2_TXD); //TX 2
-		Pins[13].function(PIN_13_UART2_RXD); //PWM
+		Pins[13].function(PIN_13_UART2_RXD); //RX 2
 		serialFd[2] = OpenSerial(2, 115200, 1, 8, eParityNone);
-		printf("\nInit Serial 2 FD: %d\n", serialFd[2]);
-		Pins[13].function(PIN_13_PWM_A3); //PWM
-		printf("\nInit Serial 2 FD: %d\n", serialFd[2]);
 
 		SerialClose(9);
-//		J2[44].function(2); //TX 9
-//		J2[41].function(2); //RX 9
-//		serialFd[6] = OpenSerial(9, 115200, 1, 8, eParityNone);
+//		serialFd[9] = OpenSerial(9, 115200, 1, 8, eParityNone);
 
-	#ifdef DEBUG_SERIAL_IO__
+#ifdef DEBUG_SERIAL_IO__
 		iprintf("Leaving Serial Init\n");
-	#endif
+#endif
 	}
 
 	inline int writePend(int* fileDesc, char* data, const int length)
 	{
-	#ifdef OLD_SERIAL_TRANSMIT
-		for(int i = 0; i < 57; i++)
-		{
-			write(*fileDesc, &data[i], 1);
-		}
-	#else
 		//writeall returns length if succesful
 		//or negative if error,
 		//TODO do something on error?
 		//printf("\nSerial 2 FD: %d\n", *fileDesc);
 		return writeall(*fileDesc, data, length);
-	#endif
-
-	#ifdef DEBUG_SERIAL_IO__
-		iprintf("Printing to Serial Port\n");
-		for(int i = 0; i < 57; i++)
-		{
-			iprintf("%2x ", data[i]);
-		}
-	#endif
-		//return 0;
 	}
 
-};
+}
 
 #endif /* SERIAL_IO_H_ */

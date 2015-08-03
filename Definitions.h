@@ -11,6 +11,7 @@
 
 #include "predef.h"
 #include <stdio.h>
+#include <constants.h>
 #include <ctype.h>
 #include <startnet.h>
 #include <autoupdate.h>
@@ -107,6 +108,6 @@
 	#define BAMA_TASK_PRIO 51
 	#define EBOOM_TASK_PRIO 50
 	#define RBOOM_TASK_PRIO 49
-	#define COMM_WRITE_TASK_PRIO 48
+	#define SERIAL_WRITE_TASK_PRIO 48
 
 #endif /* DEFINITIONS_H_ */
