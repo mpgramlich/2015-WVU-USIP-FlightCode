@@ -9,12 +9,11 @@
 
 LangmuirProbe::LangmuirProbe()
 {
-	// TODO Auto-generated constructor stub
 
 }
 
 LangmuirProbe::~LangmuirProbe()
 {
-	// TODO Auto-generated destructor stub
+
 }
 

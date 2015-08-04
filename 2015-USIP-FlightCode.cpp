@@ -78,7 +78,7 @@ void UserMain(void * pd) {
 
     //PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-
+    pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 
     OSTimeDly(20);
 

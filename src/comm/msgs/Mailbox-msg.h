@@ -20,5 +20,4 @@ namespace mail
 	};
 }
 
-
 #endif /* MAILBOX_MSG_H_ */
