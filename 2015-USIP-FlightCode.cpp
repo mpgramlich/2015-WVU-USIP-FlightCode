@@ -14,7 +14,6 @@
 #include "src/comm/spi/Synth/Synth.h"
 #include "src/comm/i2c/MCP23017/MCP23017.h"
 #include "src/comm/serial/Serial_IO.h"
-#include "src/comm/serial/Comm.h"
 #include "src/PWM/PWM.h"
 
 #include "src/Experiments/EFX.h"
