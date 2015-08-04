@@ -18,10 +18,6 @@ namespace DataMsg
 /*
 Do not use pointers to access this struct's data, pointers to data members
 	do not necessarily inherit the ((packed)) attribute
-Do not use this struct else where, this struct is already initialized
-	below in the union as msg.
-Include this header and write to msg below, send data by using the
-	array 'data'
 */
 
 	struct __attribute__((packed)) msg_t

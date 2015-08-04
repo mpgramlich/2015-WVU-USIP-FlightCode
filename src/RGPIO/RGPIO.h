@@ -12,8 +12,6 @@
 #include <HiResTimer.h>
 #include <ucos.h>
 
-static volatile PWORD pRGPIO_BAR = (PWORD) RGPIO_BAR;
-
 extern OS_SEM PITSem;
 extern OS_SEM BamaTaskStart;
 
@@ -24,6 +22,8 @@ namespace RGPIO {
 	void bamaWait();
 
 	void SetupRGPIO();
+
+	extern volatile PWORD pRGPIO_BAR;
 
 }
 

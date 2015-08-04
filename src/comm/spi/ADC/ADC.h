@@ -18,19 +18,27 @@ class ADC {
 public:
 	BYTE dspiChannel;
 	OS_SEM SPISEM;
-	static const int size = ADCTableSize;
-	volatile uint8_t __attribute__ ((aligned(2))) table[size*3]; //samples * 3 bytes each
-	volatile int32_t __attribute__ ((aligned(2))) outputCodeTable[size];
+	//static const int size = ADCTableSize;
+	//volatile uint8_t __attribute__ ((aligned(2))) table[size*3]; //samples * 3 bytes each
+	//volatile int32_t __attribute__ ((aligned(2))) outputCodeTable[size];
 	ADC(int dspiChannelInput);
 	virtual ~ADC();
 
 	void ADC_Read_Task(void * data);
 
+	/*
 	//position in the table
 	inline int readAll(int position)
 	{
 		return DSPIStart(dspiChannel,NULL,&table[position],
-									3,&SPISEM,false,DEASSERT_AFTER_LAST,FALSE);
+								3,&SPISEM,false,DEASSERT_AFTER_LAST,FALSE);
+	}
+	*/
+
+	inline int readAllPtr(BYTE* bufPtr)
+	{
+		return DSPIStart(dspiChannel,NULL,bufPtr,
+							3,&SPISEM,false,DEASSERT_AFTER_LAST,FALSE);
 	}
 };
 

@@ -20,8 +20,10 @@ ADC::ADC(int dspiChannelInput) {
 	Pins[SPIPins[(dspiChannelInput - 1) * 4 + 3]].function(1); //SPI clock
 
 	dspiChannel = dspiChannelInput;
+	/*
 	for (int i = 0; i < size; i++)
 		table[i] = 0;
+	*/
 
 	OSSemInit(&SPISEM, 0);
 
