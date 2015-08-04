@@ -46,13 +46,13 @@ namespace EFX
 		}
 	}
 
-	void runExperiment(ADC* adc);
+	int runExperiment(ADC* adc);
 
 }; /* namespace EFX */
 
 struct __attribute__((packed)) EFX::data_t
 {
-	uint32_t clock_reg_reset_count;
+	uint16_t clock_reg_reset_count;
 	uint32_t clock_reg_count;
 	BYTE adcReading[3];
 	BYTE footer;

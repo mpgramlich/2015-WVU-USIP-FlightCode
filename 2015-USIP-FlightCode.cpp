@@ -84,7 +84,10 @@ void UserMain(void * pd) {
     //dac->zeroDacOutput();
     OSTimeDly(20);
 
-    EFX::runExperiment(adc);
+    for(int i = 0; i < 20; i++)
+    {
+    	EFX::runExperiment(adc);
+    }
 
 }
 

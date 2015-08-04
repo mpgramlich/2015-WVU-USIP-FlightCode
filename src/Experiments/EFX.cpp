@@ -12,8 +12,9 @@ EFX::EFXSerialMsg_t EFX::letter[EFX_NUM_OF_BUFFERS];
 int EFX::selectedBuffer = 0;
 uint16_t EFX::experiementRunCount = 0;
 
-void EFX::runExperiment(ADC* adc)
+int EFX::runExperiment(ADC* adc)
 {
+	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)
 	{
@@ -24,7 +25,7 @@ void EFX::runExperiment(ADC* adc)
 			RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 			adc->readAllPtr(letter[selectedBuffer].msg.data[i].adcReading);
 			letter[selectedBuffer].msg.data[i].clock_reg_count = timer->readLow();
-			letter[selectedBuffer].msg.data[i].clock_reg_reset_count = timer->readHigh();
+			letter[selectedBuffer].msg.data[i].clock_reg_reset_count = (uint16_t)timer->readHigh();
 			letter[selectedBuffer].msg.data[i].footer = DATA_END_FOOTER;
 			OSSemPend(&adc->SPISEM, 0);
 			RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
@@ -39,4 +40,9 @@ void EFX::runExperiment(ADC* adc)
 		package[selectedBuffer].length = i * sizeof(EFX::data_t) + 14;
 		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
 	}
+	else
+	{
+		ret = -1;
+	}
+	return ret;
 }
