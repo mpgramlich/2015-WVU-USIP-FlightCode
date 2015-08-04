@@ -52,9 +52,10 @@ namespace EFX
 
 struct __attribute__((packed)) EFX::data_t
 {
-	uint32_t clock_reg_count;
 	uint32_t clock_reg_reset_count;
+	uint32_t clock_reg_count;
 	BYTE adcReading[3];
+	BYTE footer;
 };
 
 struct __attribute__((packed)) EFX::EFXmsg_t

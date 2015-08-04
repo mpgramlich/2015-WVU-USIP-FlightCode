@@ -28,7 +28,7 @@ void Serial_IO::SerialWriteTask(void * pd)
 		datamsg = (mail::mail_t*)OSQPend(&SerialQueue, 0, &err);
 		if(err == OS_NO_ERR || err == OS_Q_FULL)
 		{
-			Serial_IO::writePend(&Serial_IO::serialFd[2], datamsg->data, datamsg->length);
+			Serial_IO::writePend(&Serial_IO::serialFd[1], datamsg->data, datamsg->length);
 		}
 		datamsg->inUse = FALSE;
 		err = 0;

@@ -53,8 +53,10 @@ void UserMain(void * pd) {
     EnableSmartTraps();
 
     Serial_IO::initSerial();
-    ReplaceStdio(0, Serial_IO::serialFd[2]);
+    //ReplaceStdio(0, Serial_IO::serialFd[2]);
     Serial_IO::StartSerialWriteTask();
+
+    SetupTimer();
 
     SysLogAddress = AsciiToIp(SYSLOGIP);
 
@@ -62,14 +64,12 @@ void UserMain(void * pd) {
 
     adc = new ADC(ADCSPI);
     //dac = new DAC(DACSPI);
-    synth = new Synth(SYNTHSPI);
+    //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&EmptySem, 0);
     OSSemInit(&ExtendBooms, 0);
     OSSemInit(&RetractBooms, 0);
-
-    SetupTimer();
 
     RGPIO::SetupRGPIO();
 
@@ -81,10 +81,10 @@ void UserMain(void * pd) {
 
     RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 
-    dac->zeroDacOutput();
+    //dac->zeroDacOutput();
     OSTimeDly(20);
 
-
+    EFX::runExperiment(adc);
 
 }
 
@@ -155,6 +155,10 @@ void SetupTimer()
 	timer->clearInterruptFunction();
 	timer->init();
 	timer->start();
+
+	throttle->clearInterruptFunction();
+	throttle->init();
+	throttle->start();
 }
 
 

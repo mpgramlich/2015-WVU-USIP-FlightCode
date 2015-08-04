@@ -105,23 +105,25 @@
 	#endif
 
 //Task Priorities
+	/*
 	#define MAIN_TASK_PRIO 37
 	#define BAMA_TASK_PRIO MAIN_TASK_PRIO-1
 	#define EBOOM_TASK_PRIO MAIN_TASK_PRIO-2
 	#define RBOOM_TASK_PRIO MAIN_TASK_PRIO-3
 	#define SERIAL_WRITE_TASK_PRIO MAIN_TASK_PRIO-4
+	 */
 
-	/*
 	#define MAIN_TASK_PRIO 52
 	#define BAMA_TASK_PRIO 51
 	#define EBOOM_TASK_PRIO 50
 	#define RBOOM_TASK_PRIO 49
 	#define SERIAL_WRITE_TASK_PRIO 48
-	 */
+
 
 //Message Specific Definitions
 	#define MSG_HEADER 				0xFF0A0BCC
 	#define DATA_BEGIN_HEADER		0x4D47474C //'MGGL'
+	#define DATA_END_FOOTER			0xFA
 	#define IDLE 					0x00
 	#define LANGMUIR_P_EXPERIMENT 	0x01
 	#define EFX_EXPERIMENT 			0x02

@@ -25,6 +25,7 @@ void EFX::runExperiment(ADC* adc)
 			adc->readAllPtr(letter[selectedBuffer].msg.data[i].adcReading);
 			letter[selectedBuffer].msg.data[i].clock_reg_count = timer->readLow();
 			letter[selectedBuffer].msg.data[i].clock_reg_reset_count = timer->readHigh();
+			letter[selectedBuffer].msg.data[i].footer = DATA_END_FOOTER;
 			OSSemPend(&adc->SPISEM, 0);
 			RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 			throttle->busyPendStopwatch();

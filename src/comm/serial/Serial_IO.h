@@ -41,8 +41,11 @@ namespace Serial_IO
 #ifdef DEBUG_SERIAL_IO__
 		iprintf("Initializing Serial\n");
 #endif
-		SerialClose(0);
+		//SerialClose(0);
 		SerialClose(1);
+		Pins[34].function(PIN_34_UART1_TXD); //TX 2
+		Pins[32].function(PIN_32_UART1_RXD); //RX 2
+		serialFd[1] = OpenSerial(1, 115200, 1, 8, eParityNone);
 
 		SerialClose(2);
 		Pins[16].function(PIN_16_UART2_TXD); //TX 2
