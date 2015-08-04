@@ -7,17 +7,42 @@
 
 #include "Serial_IO.h"
 
-int Serial_IO::serialFd[6];
+int Serial_IO::serialFd[9];
+OS_Q Serial_IO::SerialQueue;
+void * Serial_IO::queueData[QUEUE_SIZE];
 
-void serialReadTask(void * pd)
-{
-
-};
-
-int SerialRxFlush(int fd)
+int Serial_IO::SerialRxFlush(int fd)
 {
 	//static char buf[2048];
 	if (dataavail(fd))
 		return read(fd, NULL, 2048);
 	return 0;
-};
+}
+
+void Serial_IO::SerialWriteTask(void * pd)
+{
+	BYTE err;
+	mail::mail_t* datamsg;
+	while(true)
+	{
+		datamsg = (mail::mail_t*)OSQPend(&SerialQueue, 0, &err);
+		if(err == OS_NO_ERR || err == OS_Q_FULL)
+		{
+			Serial_IO::writePend(&Serial_IO::serialFd[1], datamsg->data, datamsg->length);
+		}
+		datamsg->inUse = FALSE;
+		err = 0;
+	}
+}
+
+int Serial_IO::StartSerialWriteTask()
+{
+	int ret = 0;
+	ret = OSQInit(&SerialQueue, queueData, QUEUE_SIZE);
+	if(ret != OS_NO_ERR)
+	{
+		return ret;
+	}
+	OSSimpleTaskCreatewName(Serial_IO::SerialWriteTask, SERIAL_WRITE_TASK_PRIO, "Serial Write Task");
+	return 0;
+}

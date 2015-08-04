@@ -17,6 +17,8 @@
 #include "src/comm/serial/Comm.h"
 #include "src/PWM/PWM.h"
 
+#include "src/Experiments/EFX.h"
+
 //globals
 OS_SEM PITSem;
 OS_SEM BamaTaskStart;
@@ -51,16 +53,17 @@ void UserMain(void * pd) {
     EnableSmartTraps();
 
     Serial_IO::initSerial();
-    ReplaceStdio(0, Serial_IO::serialFd[2]);
+    //ReplaceStdio(0, Serial_IO::serialFd[2]);
+    Serial_IO::StartSerialWriteTask();
 
-    //Comm::startCommTask();
+    SetupTimer();
 
-    //SysLogAddress = AsciiToIp(SYSLOGIP);
+    SysLogAddress = AsciiToIp(SYSLOGIP);
 
     DEBUG_PRINT_NET("Application Started\r\n");
 
-    //adc = new ADC(ADCSPI);
-    dac = new DAC(DACSPI);
+    adc = new ADC(ADCSPI);
+    //dac = new DAC(DACSPI);
     //synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
@@ -68,71 +71,24 @@ void UserMain(void * pd) {
     OSSemInit(&ExtendBooms, 0);
     OSSemInit(&RetractBooms, 0);
 
-    SetupTimer();
+    RGPIO::SetupRGPIO();
 
-    //RGPIO::SetupRGPIO();
+    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    MCP23017::disableM1();
+    MCP23017::disableM2();
 
-    //MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
-    //MCP23017::disableM1();
-    //MCP23017::disableM2();
+    PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    //PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
+    RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 
-
-
+    //dac->zeroDacOutput();
     OSTimeDly(20);
 
-    dac->zeroDacOutput();
-
-    OSTimeDly(100);
-    for(int i = 0; i < 1000000; i ++)
+    for(int i = 0; i < 20; i++)
     {
-		for(DACTable::currentPlace = 0; DACTable::currentPlace < DACTable::size; DACTable::currentPlace += 3)
-		{
-			dac->writePos(DACTable::currentPlace, 3);
-			//OSSemPend(&dac->SPISEM, 0);
-			//OSTimeDly(5);
-		}
+    	EFX::runExperiment(adc);
     }
 
-    dac->zeroDacOutput();
-
-    //printf("Before Output\n");
-    //synth->testOutput();
-    //printf("After Output\n");
-    /*
-    union
-    {
-    	uint32_t raw;
-    	char rawchar[4];
-    };
-
-    iprintf("Starting Transfer\n");
-    USER_ENTER_CRITICAL();
-   // for(int i = 0; i < 5000; i += 3)
-    {
-    	adc->readAll(0);
-    	OSSemPend(&adc->SPISEM, 0);
-    }
-    USER_EXIT_CRITICAL();
-
-    for(int i = 0; i < 5000; i+=3)
-    {
-    	double volts = 0.0;
-    	int32_t actual = 0;
-    	//printf("%2X, ", adc->table[i]);
-    	rawchar[2] = adc->table[i];
-    	rawchar[3] = adc->table[i+1];
-    	raw = ((raw<<2)|(0x03&(adc->table[i+2]>>6)));
-    	actual = raw;
-    	if(raw >= 0x20000)
-    	{
-    		actual -= 0x3fffff;
-    	}
-    	volts = (double)actual * 0.000034332275390625;
-    	printf("%3.8f\n", volts);
-    }
-    */
 }
 
 void ExperimentStartISR()
@@ -202,6 +158,10 @@ void SetupTimer()
 	timer->clearInterruptFunction();
 	timer->init();
 	timer->start();
+
+	throttle->clearInterruptFunction();
+	throttle->init();
+	throttle->start();
 }
 
 

@@ -6,6 +6,8 @@
  */
 #include "RGPIO.h"
 
+volatile PWORD RGPIO::pRGPIO_BAR = (PWORD) RGPIO_BAR;
+
 void RGPIO::gpioWaitTask(void * pd)
 {
 #ifdef EnableBamaTask
