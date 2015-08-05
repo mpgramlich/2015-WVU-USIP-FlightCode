@@ -111,7 +111,7 @@
 	#define EBOOM_TASK_PRIO MAIN_TASK_PRIO-2
 	#define RBOOM_TASK_PRIO MAIN_TASK_PRIO-3
 	#define SERIAL_WRITE_TASK_PRIO MAIN_TASK_PRIO-4
-	 */
+	*/
 
 	#define MAIN_TASK_PRIO 52
 	#define BAMA_TASK_PRIO 51
@@ -132,5 +132,6 @@
 
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 10
+	#define LP_NUM_OF_BUFFERS 10
 
 #endif /* DEFINITIONS_H_ */

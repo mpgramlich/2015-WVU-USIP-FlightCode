@@ -25,7 +25,7 @@ public:
 	void DAC_Read_Task(void * data);
 
 	//do NOT send (int32_t)4719617 or (Binary) 10010000000010000000001
-	inline int writePos(int positionInTable, int numToWrite)
+	inline int writePos(int positionInTable)
 	{
 		return DSPIStart(dspiChannel, &DACTable::table[positionInTable], NULL,
 							3, &SPISEM, false, DEASSERT_AFTER_LAST, FALSE);

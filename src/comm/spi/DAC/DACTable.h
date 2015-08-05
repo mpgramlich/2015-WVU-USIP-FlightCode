@@ -10,6 +10,8 @@
 
 #include <ucos.h>
 
+#define NUM_OF_DAC_POS 240
+
 namespace DACTable
 {
 	const int size = 720;

@@ -22,13 +22,13 @@ int EFX::runExperiment(ADC* adc)
 		for(i = 0; i < NUM_OF_SAMPLES; i++)
 		{
 			throttle->startStopwatch(THROTTLE_TIME_TICKS);
-			RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
+			//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0; //testing pulses
 			adc->readAllPtr(letter[selectedBuffer].msg.data[i].adcReading);
 			letter[selectedBuffer].msg.data[i].clock_reg_count = timer->readLow();
 			letter[selectedBuffer].msg.data[i].clock_reg_reset_count = (uint16_t)timer->readHigh();
 			letter[selectedBuffer].msg.data[i].footer = DATA_END_FOOTER;
 			OSSemPend(&adc->SPISEM, 0);
-			RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
+			//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 			throttle->busyPendStopwatch();
 		}
 		letter[selectedBuffer].msg.H1 = MSG_HEADER;
