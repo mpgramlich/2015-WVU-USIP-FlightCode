@@ -20,17 +20,17 @@ Synth::Synth(int dspiChannelInput) {
 	Pins[31] = 0;
 	Pins[31] = 1;
 	printf("init delay\n");
-	timer->delay(1);
+	OSTimeDly(20);
 	Pins[31] = 0;
 	printf("init delay\n");
-	timer->delay(1);
+	OSTimeDly(20);
 	Pins[15] = 0;
 	Pins[15] = 1;
 	printf("init delay\n");
-	timer->delay(1);
+	OSTimeDly(20);
 	Pins[15] = 0;
 
-	timer->delay(1);
+	OSTimeDly(20);
 
 	Pins[15].function(PIN_15_DSPI1_PCS0); //FQ_UD
 	Pins[31].function(PIN_31_DSPI1_SCK);  //CLK

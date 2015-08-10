@@ -39,10 +39,10 @@ void RGPIO::bamaWait()
 {
 	USER_ENTER_CRITICAL();
 	//heres where we disable all other experiments
-	timer->pollingDelay(.002);
+	throttle->pollingDelay(.002);
 	asm("nop");
 	pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-	timer->pollingDelay(.001);
+	throttle->pollingDelay(.001);
 	pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 	USER_EXIT_CRITICAL();
 }

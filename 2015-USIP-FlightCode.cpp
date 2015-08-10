@@ -34,15 +34,16 @@ DAC* dac;
 Synth* synth;
 
 //externally linked stuff
-static bool TP70 = false;
-static bool TP380 = false;
+volatile bool TP70 = false;
+volatile bool TP380 = false;
 
 extern "C" {
 	void UserMain(void * pd);
+	void SetIntc(int intCntlNum,  long func, int vector, int irqLevel);
+	void ExperimentStartISR(void);
 }
 
 void ConfigureIrq7( int polarity, void ( *func )( void ) );
-void ExperimentStartISR();
 void SetupTimer();
 
 const char * AppName="2015_USIP_Flight-Code";
@@ -55,14 +56,17 @@ void UserMain(void * pd) {
     EnableSmartTraps();
 
     Serial_IO::initSerial();
-    //ReplaceStdio(0, Serial_IO::serialFd[2]);
+    ReplaceStdio(0, Serial_IO::serialFd[2]);
     Serial_IO::StartSerialWriteTask();
 
-    SetupTimer();
+//    SetupTimer();
 
     SysLogAddress = AsciiToIp(SYSLOGIP);
 
     DEBUG_PRINT_NET("Application Started\r\n");
+
+    //ConfigureIrq7(1, &ExperimentStartISR);
+    Pins[9].function( PIN_9_GPIO );
 
     adc = new ADC(ADCSPI);
     dac = new DAC(DACSPI);
@@ -81,6 +85,58 @@ void UserMain(void * pd) {
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
+    SetupTimer();
+
+    /*
+    OSTimeDly(20);
+    MCP23017::enableM1();
+    MCP23017::enableM2();
+    OSTimeDly(10*20);
+    MCP23017::disableM1();
+    MCP23017::disableM2();
+	*/
+    bool visitedActivated = false;
+    bool visitedDeactivated= false;
+    DWORD startoverflow = timer->readHigh();
+
+    DEBUG_PRINT_NET("RUNNING \r\n");
+    while(1)
+    {
+    	if(Pins[9].read() && !visitedActivated)
+    	{
+    		visitedActivated = true;
+    		//writestring(Serial_IO::serialFd[2], "activated\r\n");
+    		DEBUG_PRINT_NET("activated\r\n");
+    		startoverflow = timer->readHigh();
+    		MCP23017::enableM1();
+    		MCP23017::enableM2();
+    		OSTimeDly(10*20);
+    		MCP23017::disableM1();
+    		MCP23017::disableM2();
+    		//printf("overlfows value %u", timer->readHigh());
+    	}
+    	else if(timer->readHigh() > 8 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
+    	{
+    		visitedDeactivated = true;
+    		DEBUG_PRINT_NET("de-activated\r\n");
+    		MCP23017::enableM1();
+    		MCP23017::enableM2();
+    		OSTimeDly(10*20);
+    		MCP23017::disableM1();
+    		MCP23017::disableM2();
+    		//writestring(Serial_IO::serialFd[2], "deactivated\r\n");
+    		//printf("overlfows value %u", timer->readHigh());
+    	}
+    	else if(visitedActivated && !visitedDeactivated)
+    	{
+    		//DEBUG_PRINT_NET("timer value %u\r\noverlfows value %u\r\npin value %d\r\n", timer->readLow(), timer->readHigh(), Pins[9].read());
+    		EFX::runExperiment(adc);
+    		RGPIO::bamaWait();
+    	}
+    	//DEBUG_PRINT_NET("overlfows value %u\r\n", timer->readHigh());
+    	//DEBUG_PRINT_NET("deciaml overlfows value %u\r\n", timer->readHigh());
+    	OSTimeDly(3);
+    }
 
 }
 
@@ -88,18 +144,12 @@ void ExperimentStartISR()
 {
 	sim2.eport.epfr = 0x80;
 
-	if( TP70 && !TP380)
-	{
-		//ConfigureIrq7(-1, &ExperimentStartISR);
-		TP380 = true;
-		OSSemPost(&RetractBooms);
-	}
-
 	if(!TP70)
 	{
 		TP70 = true;
-		OSSemPost(&ExtendBooms);
+		return;
 	}
+	TP380 = true;
 	return;
 
 }
@@ -114,9 +164,10 @@ void ConfigureIrq7( int polarity, void ( *func )( void ) )
 #ifdef MOD5441X
    //J2[48].function( PINJ2_48_IRQ7 );
 #elif NANO54415
-   //Pins[9].function( PIN_9_IRQ7 );
+//   Pins[9].function( PIN_9_IRQ7 );
 #endif
 
+   Pins[9].function( PIN_9_IRQ7 );
     /* Set irq polarity
        EPPAR settings
         00 Pin IRQn level-sensitive
