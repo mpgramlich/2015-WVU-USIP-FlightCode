@@ -8,15 +8,15 @@
 #ifndef EFX_H_
 #define EFX_H_
 
-#define NUM_OF_SAMPLES 2500
-#define THROTTLE_TIME_TICKS 120000 //stopwatch count to value, one tick = 1/125000000 seconds
-
 #include "../../Definitions.h"
 #include "../comm/msgs/Data-msg.h"
 #include "../comm/msgs/Mailbox-msg.h"
 #include "../comm/serial/Serial_IO.h"
 #include "../comm/spi/ADC/ADC.h"
 #include "../RGPIO/RGPIO.h"
+
+#define NUM_OF_SAMPLES 2500
+#define THROTTLE_TIME_TICKS 120000 //stopwatch count to value, one tick = 1/125000000 seconds
 
 namespace EFX
 {

@@ -12,6 +12,7 @@
 #include "src/comm/spi/ADC/ADC.h"
 #include "src/comm/spi/DAC/DAC.h"
 #include "src/comm/spi/Synth/Synth.h"
+#include "src/comm/spi/Synth/SynthTable.h"
 #include "src/comm/i2c/MCP23017/MCP23017.h"
 #include "src/comm/serial/Serial_IO.h"
 #include "src/PWM/PWM.h"
@@ -62,8 +63,8 @@ void UserMain(void * pd) {
     DEBUG_PRINT_NET("Application Started\r\n");
 
     adc = new ADC(ADCSPI);
-    //dac = new DAC(DACSPI);
-    //synth = new Synth(SYNTHSPI);
+    dac = new DAC(DACSPI);
+    synth = new Synth(SYNTHSPI);
 
     OSSemInit(&BamaTaskStart, 0);
     OSSemInit(&EmptySem, 0);
@@ -83,9 +84,20 @@ void UserMain(void * pd) {
     //dac->zeroDacOutput();
     OSTimeDly(20);
 
+    /*
     for(int i = 0; i < 20; i++)
     {
     	EFX::runExperiment(adc);
+    }
+    */
+    for(int j = 0; j < 100000; j++)
+    {
+    for(int i = 0; i < SynthTable::size; i += 5)
+    {
+    	SynthTable::currentPosition = i;
+    	synth->writePos(SynthTable::currentPosition);
+    	OSTimeDly(10);
+    }
     }
 
 }

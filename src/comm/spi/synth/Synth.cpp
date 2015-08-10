@@ -11,6 +11,9 @@
 //lsb bit 0x800000
 Synth::Synth(int dspiChannelInput) {
 
+	dspiChannel = dspiChannelInput;
+	OSSemInit(&SPISEM, 0);
+
 	Pins[15].function(0); //FQ_UD
 	Pins[31].function(0);  //CLK
 
@@ -64,7 +67,7 @@ void Synth::testOutput()
 	{
 		testnum = Synth::genTestWord(frq);
 		//printf("in loops\n");
-		if(DSPIStart(SYNTHSPI, tx, rx, 5, &test, false, DEASSERT_AFTER_LAST, TRUE) != 0)
+		if(DSPIStart(dspiChannel, tx, rx, 5, &test, false, DEASSERT_AFTER_LAST, TRUE) != 0)
 			printf("Bus failure \n");
 		OSSemPend(&test, 0);
 		//timer->pollingDelay(.001);

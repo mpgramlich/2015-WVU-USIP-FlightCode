@@ -133,5 +133,7 @@
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 10
 	#define LP_NUM_OF_BUFFERS 10
+	#define RPE_NUM_OF_BUFFERS 20
+
 
 #endif /* DEFINITIONS_H_ */

@@ -14,8 +14,7 @@
 #include <pins.h>
 #include "SynthTable.h"
 
-
-//refclock = 125MHz
+//refclock = 100MHz
 //freqOut = 32BitWord * Refclock / 2^32
 //32BitWord = (freqOut / refClock) * 2^32
 
@@ -30,6 +29,12 @@ public:
 	void Synth_Read_Task(void * data);
 
 	void testOutput();
+
+	inline int writePos(int positionInTable)
+	{
+		return DSPIStart(dspiChannel, &SynthTable::table[positionInTable], NULL,
+							5, &SPISEM, false, DEASSERT_AFTER_LAST, TRUE);
+	}
 
 	inline uint32_t genTestWord(double freq)
 	{
