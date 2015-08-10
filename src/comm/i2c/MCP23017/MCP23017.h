@@ -38,6 +38,8 @@ namespace MCP23017
 	BYTE inline disableM2();
 	BYTE inline enableM1();
 	BYTE inline enableM2();
+	BYTE inline enableVCO();
+	BYTE inline disableVCO();
 	void inline retractBooms();
 	void inline extendBooms();
 }
@@ -104,6 +106,23 @@ BYTE inline MCP23017::enableM2()
 	currOutRegs = txBuf[1];
 	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
 }
+
+BYTE inline MCP23017::enableVCO()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs & 0x04;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+
+BYTE inline MCP23017::disableVCO()
+{
+	txBuf[0] = MCP23017_OLATA;
+	txBuf[1] = currOutRegs & 0xFB;
+	currOutRegs = txBuf[1];
+	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+}
+
 void inline MCP23017::extendBooms()
 {
 	OSSimpleTaskCreatewName(MCP23017::extendBoomsTask, EBOOM_TASK_PRIO,

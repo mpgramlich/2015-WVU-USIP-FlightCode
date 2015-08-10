@@ -18,6 +18,7 @@
 #include "src/PWM/PWM.h"
 
 #include "src/Experiments/EFX.h"
+#include "src/Experiments/LangmuirProbe.h"
 
 //globals
 OS_SEM PITSem;
