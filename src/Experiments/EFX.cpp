@@ -14,6 +14,7 @@ uint16_t EFX::experiementRunCount = 0;
 
 int EFX::runExperiment(ADC* adc)
 {
+	RGPIO::setMuxEFX();
 	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)

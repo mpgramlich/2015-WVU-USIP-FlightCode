@@ -19,6 +19,7 @@
 
 #include "src/Experiments/EFX.h"
 #include "src/Experiments/LangmuirProbe.h"
+#include "src/Experiments/RPE.h"
 
 //globals
 OS_SEM PITSem;
@@ -80,14 +81,6 @@ void UserMain(void * pd) {
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    /*RGPIO::setPin(0, TRUE);
-    OSTimeDly(60);
-    RGPIO::setPin(0, TRUE);
-    OSTimeDly(60);
-    RGPIO::setPin(0, FALSE);
-    */
-    RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-    //RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 
 }
 

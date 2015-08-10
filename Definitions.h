@@ -31,7 +31,12 @@
 //RGPIO
 	//#define EnableBamaTask 1.0101 //hertz of 1 ms pulse
 	//#define EnableBamaTask 1.0 //hertz of 1 ms pulse
-	#define GPIO_PIN 12
+	#define TDIP_PIN 12
+	#define MUX_A0 21
+	#define MUX_A1 23
+	#define TDIP 0
+	#define A0 2
+	#define A1 3
 	// Addresses of Rapid GPIO registers
 	#define RGPIO_BAR 0x8C000000           // Base Address Register
 
@@ -139,9 +144,9 @@
 	#define TRILE_PROBE_EXPERIMENT 	0x08
 
 //Experiment Data Buffers
-	#define EFX_NUM_OF_BUFFERS 10
-	#define LP_NUM_OF_BUFFERS 10
-	#define RPE_NUM_OF_BUFFERS 20
+	#define EFX_NUM_OF_BUFFERS 100
+	#define LP_NUM_OF_BUFFERS 100
+	#define RPE_NUM_OF_BUFFERS 100
 
 
 #endif /* DEFINITIONS_H_ */

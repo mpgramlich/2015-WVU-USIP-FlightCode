@@ -8,7 +8,6 @@
 #ifndef LANGMUIRPROBE_H_
 #define LANGMUIRPROBE_H_
 
-#define NUM_OF_SAMPLES 2500
 #define THROTTLE_TIME_TICKS 120000 //stopwatch count to value, one tick = 1/125000000 seconds
 
 #include "../../Definitions.h"

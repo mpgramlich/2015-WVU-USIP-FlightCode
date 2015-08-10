@@ -14,6 +14,10 @@ uint16_t RPE::experiementRunCount = 0;
 
 int RPE::runExperiment(ADC* adc, Synth* synth)
 {
+	MCP23017::enableVCO();
+	RGPIO::setMuxRPE();
+	RGPIO::bamaWait();
+
 	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)
@@ -51,5 +55,6 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 	{
 		ret = -1;
 	}
+	MCP23017::disableVCO();
 	return ret;
 }

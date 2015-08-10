@@ -14,6 +14,7 @@
 #include "../comm/serial/Serial_IO.h"
 #include "../comm/spi/ADC/ADC.h"
 #include "../comm/spi/Synth/Synth.h"
+#include "../comm/i2c/MCP23017/MCP23017.h"
 #include "../RGPIO/RGPIO.h"
 
 #define NUM_OF_SAMPLES_PER_FREQ 15

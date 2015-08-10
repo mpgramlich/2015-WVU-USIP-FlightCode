@@ -28,7 +28,24 @@ namespace RGPIO {
 	extern BYTE val1;
 	extern BYTE val2;
 	extern BYTE val3;
+
 	BYTE inline setPin(int num, BYTE val);
+
+	void inline setMuxLP()
+	{
+		setPin(A0, FALSE);
+		setPin(A1, FALSE);
+	}
+	void inline setMuxRPE()
+	{
+		setPin(A0, FALSE);
+		setPin(A1, TRUE);
+	}
+	void inline setMuxEFX()
+	{
+		setPin(A0, TRUE);
+		setPin(A1, FALSE);
+	}
 }
 
 BYTE inline RGPIO::setPin(int num, BYTE val)
@@ -69,6 +86,7 @@ BYTE inline RGPIO::setPin(int num, BYTE val)
 			}
 			return val3;
 	}
+	return -1;
 }
 
 #endif /* RGPIO_H_ */
