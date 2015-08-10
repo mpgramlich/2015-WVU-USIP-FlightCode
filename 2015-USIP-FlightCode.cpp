@@ -80,26 +80,14 @@ void UserMain(void * pd) {
 
     PWM::initPWM(PWMOutPin, PWMOn, PWMOff, PWMInitVal, PWMResetVal);
 
-    RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-
-    //dac->zeroDacOutput();
-    OSTimeDly(20);
-
-    /*
-    for(int i = 0; i < 20; i++)
-    {
-    	EFX::runExperiment(adc);
-    }
+    /*RGPIO::setPin(0, TRUE);
+    OSTimeDly(60);
+    RGPIO::setPin(0, TRUE);
+    OSTimeDly(60);
+    RGPIO::setPin(0, FALSE);
     */
-    for(int j = 0; j < 100000; j++)
-    {
-    for(int i = 0; i < SynthTable::size; i += 5)
-    {
-    	SynthTable::currentPosition = i;
-    	synth->writePos(SynthTable::currentPosition);
-    	OSTimeDly(10);
-    }
-    }
+    RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
+    //RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 
 }
 

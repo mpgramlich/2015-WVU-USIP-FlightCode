@@ -43,7 +43,15 @@
 	#define RGPIO_SET (5)   // Set
 	#define RGPIO_TOG (7)   // Toggle
 
-	#define RGPIO_0 0x0001     // Pin 12
+	#define RGPIO_0 0x0001     // Pin 37  N11
+	#define RGPIO_1 0x0002     // Pin 32  G13
+	#define RGPIO_2 0x0004     // Pin 33  H14
+	#define RGPIO_3 0x0008     // Pin 34  H13
+	#define RGPIO_4 0x0010     // Pin 36  H15
+	#define RGPIO_5 0x0020     // Pin 29  E13
+	#define RGPIO_6 0x0040     // Pin 23  B11
+	#define RGPIO_7 0x0080     // Pin 24  C10
+	#define RGPIO_8 0x0100     // Pin 25  D10
 
 //HiResTimers
 	static HiResTimer* timer = HiResTimer::getHiResTimer(2);
@@ -127,7 +135,7 @@
 	#define IDLE 					0x00
 	#define LANGMUIR_P_EXPERIMENT 	0x01
 	#define EFX_EXPERIMENT 			0x02
-	#define RADIO_PLASMA_EXPERIMENT 0x04
+	#define RPE_EXPERIMENT 			0x04
 	#define TRILE_PROBE_EXPERIMENT 	0x08
 
 //Experiment Data Buffers
