@@ -115,7 +115,7 @@ void UserMain(void * pd) {
     		MCP23017::disableM2();
     		//printf("overlfows value %u", timer->readHigh());
     	}
-    	else if(timer->readHigh() > 8 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
+    	else if(timer->readHigh() > 2 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
     	{
     		visitedDeactivated = true;
     		DEBUG_PRINT_NET("de-activated\r\n");
