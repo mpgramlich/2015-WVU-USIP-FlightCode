@@ -16,7 +16,7 @@ int LP::runExperiment(ADC* adc, DAC* dac)
 {
 	RGPIO::setMuxLP();
 	int ret = 0;
-	selectNextBuffer();
+	//selectNextBuffer();
 	if(selectedBuffer >= 0)
 	{
 		int i;

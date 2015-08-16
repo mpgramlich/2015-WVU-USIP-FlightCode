@@ -100,12 +100,13 @@ void UserMain(void * pd) {
     DWORD startoverflow = timer->readHigh();
 
     DEBUG_PRINT_NET("RUNNING \r\n");
-
-    for(int i = 0; i < 100000; i++)
+    for(int j = 0; j < 2147483647; j++)
+    {
+    for(int i = 0; i < 2147483647; i++)
     {
     	LP::runExperiment(adc, dac);
     }
-
+    }
 }
 
 void ExperimentStartISR()
