@@ -100,43 +100,12 @@ void UserMain(void * pd) {
     DWORD startoverflow = timer->readHigh();
 
     DEBUG_PRINT_NET("RUNNING \r\n");
-    while(1)
+
+    for(int i = 0; i < 10000; i++)
     {
-    	if(Pins[9].read() && !visitedActivated)
-    	{
-    		visitedActivated = true;
-    		//writestring(Serial_IO::serialFd[2], "activated\r\n");
-    		DEBUG_PRINT_NET("activated\r\n");
-    		startoverflow = timer->readHigh();
-    		MCP23017::enableM1();
-    		MCP23017::enableM2();
-    		OSTimeDly(10*20);
-    		MCP23017::disableM1();
-    		MCP23017::disableM2();
-    		//printf("overlfows value %u", timer->readHigh());
-    	}
-    	else if(timer->readHigh() > 8 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
-    	{
-    		visitedDeactivated = true;
-    		DEBUG_PRINT_NET("de-activated\r\n");
-    		MCP23017::enableM1();
-    		MCP23017::enableM2();
-    		OSTimeDly(10*20);
-    		MCP23017::disableM1();
-    		MCP23017::disableM2();
-    		//writestring(Serial_IO::serialFd[2], "deactivated\r\n");
-    		//printf("overlfows value %u", timer->readHigh());
-    	}
-    	else if(visitedActivated && !visitedDeactivated)
-    	{
-    		//DEBUG_PRINT_NET("timer value %u\r\noverlfows value %u\r\npin value %d\r\n", timer->readLow(), timer->readHigh(), Pins[9].read());
-    		EFX::runExperiment(adc);
-    		RGPIO::bamaWait();
-    	}
-    	//DEBUG_PRINT_NET("overlfows value %u\r\n", timer->readHigh());
-    	//DEBUG_PRINT_NET("deciaml overlfows value %u\r\n", timer->readHigh());
-    	OSTimeDly(3);
+    	RPE::runExperiment(adc, synth);
     }
+
 
 }
 

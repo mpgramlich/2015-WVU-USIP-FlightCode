@@ -28,28 +28,9 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 			int i;
 			SynthTable::currentPosition = j * 5;
 			synth->writePos(SynthTable::currentPosition);
-			for(i = 0; i < NUM_OF_SAMPLES_PER_FREQ; i++)
-			{
-				throttle->startStopwatch(THROTTLE_TIME_TICKS);
-				//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0; //testing pulses
-				adc->readAllPtr(letter[selectedBuffer].msg.data[dataPos].adcReading);
-				letter[selectedBuffer].msg.data[dataPos].clock_reg_count = timer->readLow();
-				letter[selectedBuffer].msg.data[dataPos].clock_reg_reset_count = (uint16_t)timer->readHigh();
-				letter[selectedBuffer].msg.data[dataPos].footer = DATA_END_FOOTER;
-				OSSemPend(&adc->SPISEM, 0);
-				//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
-				throttle->busyPendStopwatch();
-				dataPos++;
-			}
+			OSTimeDly(3*20);
 		}
-		letter[selectedBuffer].msg.H1 = MSG_HEADER;
-		letter[selectedBuffer].msg.counter = selectedBuffer;
-		letter[selectedBuffer].msg.experiment = RPE_EXPERIMENT;
-		letter[selectedBuffer].msg.datalength = dataPos;
-		letter[selectedBuffer].msg.databegin = DATA_BEGIN_HEADER;
-		package[selectedBuffer].data = letter[selectedBuffer].serialData;
-		package[selectedBuffer].length = dataPos * sizeof(RPE::data_t) + 14;
-		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
+
 	}
 	else
 	{

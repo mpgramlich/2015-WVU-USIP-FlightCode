@@ -62,10 +62,7 @@ void Synth::testOutput()
 
 	//DSPIStart(SYNTHSPI, tx, rx, 5, &test, false, DEASSERT_AFTER_LAST, TRUE);
 
-	printf("before loops %d\n", testnum < (uint32_t)100000);
-	for(double frq = 1000; frq < 1000000.0; frq++ )
-	{
-		testnum = Synth::genTestWord(frq);
+		testnum = Synth::genTestWord(1500000);
 		//printf("in loops\n");
 		if(DSPIStart(dspiChannel, tx, rx, 5, &test, false, DEASSERT_AFTER_LAST, TRUE) != 0)
 			printf("Bus failure \n");
@@ -76,9 +73,21 @@ void Synth::testOutput()
 		tx[2] = blank[1];
 		tx[3] = blank[0];
 		tx[4] = 0x00;
-		if((int)frq % 10000 == 0)
-			printf("%f", frq);
-	}
+
+		OSTimeDly(60);
+
+		testnum = Synth::genTestWord(0);
+				//printf("in loops\n");
+				if(DSPIStart(dspiChannel, tx, rx, 5, &test, false, DEASSERT_AFTER_LAST, TRUE) != 0)
+					printf("Bus failure \n");
+				OSSemPend(&test, 0);
+				//timer->pollingDelay(.001);
+				tx[0] = blank[3];
+				tx[1] = blank[2];
+				tx[2] = blank[1];
+				tx[3] = blank[0];
+				tx[4] = 0x00;
+
 }
 
 Synth::~Synth() {
