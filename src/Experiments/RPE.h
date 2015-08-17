@@ -67,6 +67,8 @@ struct __attribute__((packed)) RPE::RPEmsg_t
 	uint32_t H1;
 	uint16_t counter;
 	uint16_t experiment; //0 idle, 1 Langmuir Probe, RPE, Radio Plasma, Triple Probe
+	uint8_t VCOStat;
+	uint8_t bufnum;
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;

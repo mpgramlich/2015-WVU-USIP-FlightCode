@@ -55,12 +55,15 @@ void RGPIO::SetupRGPIO()
 	Pins[MUX_A0] = 0;
 	Pins[MUX_A1].function(PIN_23_GPIO);
 	Pins[MUX_A1] = 0;
+	Pins[SYNTH_RESET_PIN].function(PIN_25_GPIO);
+	Pins[SYNTH_RESET_PIN] = 0;
+
     // Enable processor access to the RGPIO module
 	asm(" move.l #0x8C000035,%d0");  // All bits fixed except bit 0, set to 1 to enable
 	asm(" movec %d0,#0x009");        // Use movec to write to control register
 
-	pRGPIO_BAR[RGPIO_DIR] = RGPIO_0 | RGPIO_2 | RGPIO_3;    // Set RGPIO to be an output
-   	pRGPIO_BAR[RGPIO_ENB] = RGPIO_0 | RGPIO_2 | RGPIO_3;    // Enable RGPIO pin
+	pRGPIO_BAR[RGPIO_DIR] = RGPIO_0 | RGPIO_1 | RGPIO_2 | RGPIO_3;    // Set RGPIO to be an output
+   	pRGPIO_BAR[RGPIO_ENB] = RGPIO_0 | RGPIO_1 | RGPIO_2 | RGPIO_3;    // Enable RGPIO pin
 
     // Set DSPI0 & One-Wire Slew Rate Control Register (SRCR_DSPIOW) to their maximum freq
    	sim1.gpio.srcr_dspiow = 0x33;

@@ -13,6 +13,7 @@
 #include <iosys.h>
 #include <serial.h>
 #include <pins.h>
+#include <stdarg.h>
 #include "../msgs/Mailbox-msg.h"
 
 #ifdef DEBUG_SERIAL_IO__
@@ -67,6 +68,20 @@ namespace Serial_IO
 		//TODO do something on error?
 		//printf("\nSerial 2 FD: %d\n", *fileDesc);
 		return writeall(*fileDesc, data, length);
+	}
+
+	inline void debugPrintUart(int *fileDesc, const char *format, ...)
+	{
+		int rv;
+		char printBuffer[255];
+		va_list arg_ptr;
+		va_start(arg_ptr, format);
+		rv = vsnprintf(printBuffer, 255, format, arg_ptr);
+		va_end(arg_ptr);
+		if (rv)
+		{
+			writeall(*fileDesc, printBuffer, rv);
+		}
 	}
 
 }

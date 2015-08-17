@@ -46,6 +46,12 @@ namespace RGPIO {
 		setPin(A0, TRUE);
 		setPin(A1, FALSE);
 	}
+	void inline resetSynth()
+	{
+		setPin(SYNTH_RESET, FALSE);
+		setPin(SYNTH_RESET, TRUE);
+		setPin(SYNTH_RESET, FALSE);
+	}
 }
 
 BYTE inline RGPIO::setPin(int num, BYTE val)

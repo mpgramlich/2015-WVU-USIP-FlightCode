@@ -48,7 +48,9 @@ BYTE MCP23017::pollInput(bool AnotB, BYTE* rx)
 	retVal = Master_I2CSendBuf(MCP23017_Bus_Add, rx, 1);
 	if(retVal > 3)
 		return retVal;
-	return Master_I2CReadBuf(MCP23017_Bus_Add, rx, 1);
+	retVal = Master_I2CReadBuf(MCP23017_Bus_Add, rx, 1);
+	rx[0] = ~rx[0];
+	return retVal;
 }
 
 void MCP23017::extendBoomsTask(void * pd)

@@ -34,7 +34,9 @@
 	#define TDIP_PIN 12
 	#define MUX_A0 21
 	#define MUX_A1 23
+	#define SYNTH_RESET_PIN 25
 	#define TDIP 0
+	#define SYNTH_RESET 1
 	#define A0 2
 	#define A1 3
 	// Addresses of Rapid GPIO registers
@@ -141,7 +143,7 @@
 	#define LANGMUIR_P_EXPERIMENT 	0x01
 	#define EFX_EXPERIMENT 			0x02
 	#define RPE_EXPERIMENT 			0x04
-	#define TRILE_PROBE_EXPERIMENT 	0x08
+	#define ALABAMA_EXPERIMENT	 	0x08
 
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 100

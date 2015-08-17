@@ -10,6 +10,7 @@
 
 #include "../../../../Definitions.h"
 #include <i2cmaster.h>
+#include "../../serial/Serial_IO.h"
 
 extern OS_SEM ExtendBooms;
 extern OS_SEM RetractBooms;
@@ -47,7 +48,7 @@ namespace MCP23017
 #define BOOMS_RETRACTED 0x14
 #define BOOMS_EXTENDED 0x28
 
-#define IODIRA_VAL 0xFC //1111 1100
+#define IODIRA_VAL 0xC0 //1100 0000
 #define IODIRB_VAL 0xFF //1111 1111
 
 #define MCP23017_GPIO_A 0x12
@@ -109,18 +110,42 @@ BYTE inline MCP23017::enableM2()
 
 BYTE inline MCP23017::enableVCO()
 {
+#define VCOENABLED 0x10
+	BYTE ret = 0;
 	txBuf[0] = MCP23017_OLATA;
-	txBuf[1] = currOutRegs & 0x04;
+	txBuf[1] = currOutRegs | VCOENABLED;
 	currOutRegs = txBuf[1];
-	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+	ret = Master_I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+	//ret = Master_I2CRestart(MCP23017_Bus_Add, true);
+	if(ret <= 3 && pollInput(true, rxBuf) <= 3)
+	{
+		if((rxBuf[0] & VCOENABLED) != VCOENABLED)
+		{
+			return -98; //0x9E
+		}
+	}
+	return ret;
+#undef VCOENABLED
 }
 
 BYTE inline MCP23017::disableVCO()
 {
+#define VCODISABLED 0x10
+	BYTE ret = 0;
 	txBuf[0] = MCP23017_OLATA;
-	txBuf[1] = currOutRegs & 0xFB;
+	txBuf[1] = currOutRegs & ~VCODISABLED;
 	currOutRegs = txBuf[1];
-	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+	ret = Master_I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
+	//ret = Master_I2CRestart(MCP23017_Bus_Add, true);
+	if(ret <= 3 && pollInput(true, rxBuf) <= 3)
+	{
+		if((rxBuf[0] & VCODISABLED) != 0)
+		{
+			return -98; //0x9E
+		}
+	}
+	return ret;
+#undef VCODISABLED
 }
 
 void inline MCP23017::extendBooms()
