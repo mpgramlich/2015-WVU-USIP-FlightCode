@@ -125,6 +125,9 @@ void UserMain(void * pd) {
     		//DEBUG_PRINT_NET("timer value %u\r\noverlfows value %u\r\npin value %d\r\n", timer->readLow(), timer->readHigh(), Pins[9].read());
     		RPE::runExperiment(adc, synth);
     		RGPIO::bamaWait();
+    		EFX::runExperiment(adc);
+    		RGPIO::bamaWait();
+    		LP::runExperiment(adc, dac);
     	}
     	//DEBUG_PRINT_NET("overlfows value %u\r\n", timer->readHigh());
     	//DEBUG_PRINT_NET("deciaml overlfows value %u\r\n", timer->readHigh());

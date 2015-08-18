@@ -1,31 +1,33 @@
 /*
- * EFX.h
+ * BAMA.h
  *
  *  Created on: Aug 3, 2015
  *      Author: Matt Gramlich
  */
 
-#ifndef EFX_H_
-#define EFX_H_
+#ifndef BAMA_H_
+#define BAMA_H_
 
 #include "../../Definitions.h"
 #include "../comm/msgs/Data-msg.h"
 #include "../comm/msgs/Mailbox-msg.h"
 #include "../comm/serial/Serial_IO.h"
 #include "../comm/spi/ADC/ADC.h"
+#include "../comm/spi/Synth/Synth.h"
+#include "../comm/i2c/MCP23017/MCP23017.h"
 #include "../RGPIO/RGPIO.h"
 
-#define NUM_OF_SAMPLES 2500
+#define NUM_OF_SAMPLES_PER_FREQ 15
 #define THROTTLE_TIME_TICKS 120000 //stopwatch count to value, one tick = 1/125000000 seconds
 
-namespace EFX
+namespace BAMA
 {
 	struct __attribute__((packed)) data_t;
-	struct __attribute__((packed)) EFXmsg_t;
-	union EFXSerialMsg_t;
+	struct __attribute__((packed)) BAMAmsg_t;
+	union BAMASerialMsg_t;
 
-	extern mail::mail_t package[EFX_NUM_OF_BUFFERS];
-	extern EFXSerialMsg_t letter[EFX_NUM_OF_BUFFERS];
+	extern mail::mail_t package[BAMA_NUM_OF_BUFFERS];
+	extern BAMASerialMsg_t letter[BAMA_NUM_OF_BUFFERS];
 	extern int selectedBuffer;
 	extern uint16_t experiementRunCount;
 
@@ -35,7 +37,7 @@ namespace EFX
 	//returns -1 if no buffer is available
 	void inline selectNextBuffer()
 	{
-		selectedBuffer = EFX_NUM_OF_BUFFERS - 1;
+		selectedBuffer = BAMA_NUM_OF_BUFFERS - 1;
 		for(; selectedBuffer >= 0; selectedBuffer--)
 		{
 			if(package[selectedBuffer].inUse == FALSE)
@@ -46,33 +48,37 @@ namespace EFX
 		}
 	}
 
-	int runExperiment(ADC* adc);
+	int runExperiment(ADC* adc, Synth* synth);
 
-}; /* namespace EFX */
+}; /* namespace BAMA */
 
-struct __attribute__((packed)) EFX::data_t
+struct __attribute__((packed)) BAMA::data_t
 {
 	uint16_t clock_reg_reset_count;
 	uint32_t clock_reg_count;
+	BYTE sampleNum;
+	BYTE synthTablePosition;
 	BYTE adcReading[3];
 	BYTE footer;
 };
 
-struct __attribute__((packed)) EFX::EFXmsg_t
+struct __attribute__((packed)) BAMA::BAMAmsg_t
 {
 	uint32_t H1;
 	uint16_t counter;
-	uint16_t experiment; //0 idle, 1 Langmuir Probe, EFX, Radio Plasma, Triple Probe
+	uint16_t experiment; //0 idle, 1 Langmuir Probe, BAMA, Radio Plasma, Triple Probe
+	uint8_t VCOStat;
+	uint8_t bufnum;
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[5000]; //this assumes a 2000Hz sample rate for 2.5 seconds
+	data_t data[3000];
 };
 
-union EFX::EFXSerialMsg_t
+union BAMA::BAMASerialMsg_t
 {
-	EFXmsg_t msg;
-	char serialData[sizeof(EFXmsg_t)];
+	BAMAmsg_t msg;
+	char serialData[sizeof(BAMAmsg_t)];
 };
 
-#endif /* EFX_H_ */
+#endif /* BAMA_H_ */
