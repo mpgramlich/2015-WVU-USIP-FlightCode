@@ -29,7 +29,7 @@ namespace RPE
 	extern mail::mail_t package[RPE_NUM_OF_BUFFERS];
 	extern RPESerialMsg_t letter[RPE_NUM_OF_BUFFERS];
 	extern int selectedBuffer;
-	extern uint16_t experiementRunCount;
+	extern uint16_t experimentRunCount;
 
 	//choose next available buffer,
 	//toggle its inUse flag,
@@ -62,6 +62,7 @@ struct __attribute__((packed)) RPE::data_t
 	BYTE footer;
 };
 
+#define RPE_MSG_SIZE_MINUS_DATA 16
 struct __attribute__((packed)) RPE::RPEmsg_t
 {
 	uint32_t H1;

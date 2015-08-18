@@ -10,7 +10,7 @@
 mail::mail_t RPE::package[RPE_NUM_OF_BUFFERS];
 RPE::RPESerialMsg_t RPE::letter[RPE_NUM_OF_BUFFERS];
 int RPE::selectedBuffer = 0;
-uint16_t RPE::experiementRunCount = 0;
+uint16_t RPE::experimentRunCount = 1;
 
 int RPE::runExperiment(ADC* adc, Synth* synth)
 {
@@ -64,15 +64,15 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 			}
 		}
 		letter[selectedBuffer].msg.H1 = MSG_HEADER;
-		letter[selectedBuffer].msg.counter = experiementRunCount;
+		letter[selectedBuffer].msg.counter = experimentRunCount;
 		letter[selectedBuffer].msg.experiment = RPE_EXPERIMENT;
 		letter[selectedBuffer].msg.VCOStat = VCOStatus;
 		letter[selectedBuffer].msg.bufnum = selectedBuffer;
 		letter[selectedBuffer].msg.datalength = dataPos;
 		letter[selectedBuffer].msg.databegin = DATA_BEGIN_HEADER;
 		package[selectedBuffer].data = letter[selectedBuffer].serialData;
-		package[selectedBuffer].length = dataPos * sizeof(RPE::data_t) + 16;
-		experiementRunCount++;
+		package[selectedBuffer].length = dataPos * sizeof(RPE::data_t) + RPE_MSG_SIZE_MINUS_DATA;
+		experimentRunCount++;
 		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
 		MCP23017::disableVCO();
 

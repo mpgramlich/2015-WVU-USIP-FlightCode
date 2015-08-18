@@ -60,8 +60,9 @@ void UserMain(void * pd) {
     Serial_IO::StartSerialWriteTask();
 
 //    SetupTimer();
-
+#ifdef SYSLOG_H
     SysLogAddress = AsciiToIp(SYSLOGIP);
+#endif
 
     DEBUG_PRINT_NET("Application Started\r\n");
 

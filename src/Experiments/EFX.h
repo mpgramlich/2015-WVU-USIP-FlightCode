@@ -27,7 +27,7 @@ namespace EFX
 	extern mail::mail_t package[EFX_NUM_OF_BUFFERS];
 	extern EFXSerialMsg_t letter[EFX_NUM_OF_BUFFERS];
 	extern int selectedBuffer;
-	extern uint16_t experiementRunCount;
+	extern uint16_t experimentRunCount;
 
 	//choose next available buffer,
 	//toggle its inUse flag,
@@ -58,11 +58,14 @@ struct __attribute__((packed)) EFX::data_t
 	BYTE footer;
 };
 
+#define EFX_MSG_SIZE_MINUS_DATA 15
 struct __attribute__((packed)) EFX::EFXmsg_t
 {
 	uint32_t H1;
 	uint16_t counter;
-	uint16_t experiment; //0 idle, 1 Langmuir Probe, EFX, Radio Plasma, Triple Probe
+	uint16_t experiment; //0 idle, 1 Langmuir Probe, RPE, Radio Plasma, Triple Probe
+	//uint8_t VCOStat;
+	uint8_t bufnum;
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;

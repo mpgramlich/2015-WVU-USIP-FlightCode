@@ -10,7 +10,7 @@
 mail::mail_t EFX::package[EFX_NUM_OF_BUFFERS];
 EFX::EFXSerialMsg_t EFX::letter[EFX_NUM_OF_BUFFERS];
 int EFX::selectedBuffer = 0;
-uint16_t EFX::experiementRunCount = 0;
+uint16_t EFX::experimentRunCount = 1;
 
 int EFX::runExperiment(ADC* adc)
 {
@@ -38,7 +38,7 @@ int EFX::runExperiment(ADC* adc)
 		letter[selectedBuffer].msg.datalength = i;
 		letter[selectedBuffer].msg.databegin = DATA_BEGIN_HEADER;
 		package[selectedBuffer].data = letter[selectedBuffer].serialData;
-		package[selectedBuffer].length = i * sizeof(EFX::data_t) + 14;
+		package[selectedBuffer].length = i * sizeof(EFX::data_t) + EFX_MSG_SIZE_MINUS_DATA;
 		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
 	}
 	else

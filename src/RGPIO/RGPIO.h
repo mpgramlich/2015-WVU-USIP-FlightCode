@@ -56,7 +56,7 @@ namespace RGPIO {
 
 BYTE inline RGPIO::setPin(int num, BYTE val)
 {
-	DEBUG_PRINT_NET("enternet\r\n");
+	DEBUG_PRINT_NET("entered setPin\r\n");
 	switch (num)
 	{
 		case 0:

@@ -10,7 +10,7 @@
 mail::mail_t LP::package[LP_NUM_OF_BUFFERS];
 LP::LPSerialMsg_t LP::letter[LP_NUM_OF_BUFFERS];
 int LP::selectedBuffer = 0;
-uint16_t LP::experiementRunCount = 0;
+uint16_t LP::experimentRunCount = 1;
 
 int LP::runExperiment(ADC* adc, DAC* dac)
 {
@@ -41,7 +41,7 @@ int LP::runExperiment(ADC* adc, DAC* dac)
 		letter[selectedBuffer].msg.datalength = i;
 		letter[selectedBuffer].msg.databegin = DATA_BEGIN_HEADER;
 		package[selectedBuffer].data = letter[selectedBuffer].serialData;
-		package[selectedBuffer].length = i * sizeof(LP::data_t) + 14;
+		package[selectedBuffer].length = i * sizeof(LP::data_t) + LP_MSG_SIZE_MINUS_DATA;
 		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
 	}
 	else

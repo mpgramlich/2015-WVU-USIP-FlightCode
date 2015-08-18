@@ -17,8 +17,7 @@
 #include "../comm/i2c/MCP23017/MCP23017.h"
 #include "../RGPIO/RGPIO.h"
 
-#define NUM_OF_SAMPLES_PER_FREQ 15
-#define THROTTLE_TIME_TICKS 120000 //stopwatch count to value, one tick = 1/125000000 seconds
+#define TIMER_TICKS 125000 //stopwatch count to value, one tick = 1/125000000 seconds
 
 namespace BAMA
 {
@@ -29,7 +28,7 @@ namespace BAMA
 	extern mail::mail_t package[BAMA_NUM_OF_BUFFERS];
 	extern BAMASerialMsg_t letter[BAMA_NUM_OF_BUFFERS];
 	extern int selectedBuffer;
-	extern uint16_t experiementRunCount;
+	extern uint16_t experimentRunCount;
 
 	//choose next available buffer,
 	//toggle its inUse flag,
@@ -62,17 +61,18 @@ struct __attribute__((packed)) BAMA::data_t
 	BYTE footer;
 };
 
+#define BAMA_MSG_SIZE_MINUS_DATA 15
 struct __attribute__((packed)) BAMA::BAMAmsg_t
 {
 	uint32_t H1;
 	uint16_t counter;
 	uint16_t experiment; //0 idle, 1 Langmuir Probe, BAMA, Radio Plasma, Triple Probe
-	uint8_t VCOStat;
+	//uint8_t VCOStat;
 	uint8_t bufnum;
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[3000];
+	data_t data[500];
 };
 
 union BAMA::BAMASerialMsg_t
