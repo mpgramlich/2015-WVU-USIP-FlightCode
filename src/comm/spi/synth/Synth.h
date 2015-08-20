@@ -1,6 +1,6 @@
 /*
  * Synth.h
- *
+ * For use with the AD9850
  *  Created on: May 31, 2015
  *      Author: Matt Gramlich
  */
