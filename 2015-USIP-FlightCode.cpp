@@ -20,6 +20,9 @@
 #include "src/Experiments/EFX.h"
 #include "src/Experiments/LangmuirProbe.h"
 #include "src/Experiments/RPE.h"
+#include "src/Experiments/Alabama.h"
+#include "src/comm/msgs/Data-msg.h"
+#include "src/comm/msgs/Mailbox-msg.h"
 
 //globals
 OS_SEM PITSem;
@@ -32,6 +35,9 @@ OS_SEM DataSem;
 ADC* adc;
 DAC* dac;
 Synth* synth;
+
+DataMsg::dataMsg_t payloadActivatedMsg;
+mail::mail_t payloadActivatedLetter;
 
 //externally linked stuff
 volatile bool TP70 = false;
@@ -93,6 +99,13 @@ void UserMain(void * pd) {
     DWORD startoverflow = timer->readHigh();
 
     //DEBUG_PRINT_NET("RUNNING \r\n");
+    payloadActivatedMsg.msg.H1 = MSG_HEADER;
+    payloadActivatedMsg.msg.counter = 0x00;
+    payloadActivatedMsg.msg.experiment = 0xFF;
+    payloadActivatedMsg.msg.databegin = DATA_BEGIN_HEADER;
+    payloadActivatedMsg.msg.F1 = DATA_END_FOOTER;
+    payloadActivatedLetter.length = DataMsg::size;
+    payloadActivatedLetter.inUse = TRUE;
 
     while(1)
     {
@@ -102,8 +115,12 @@ void UserMain(void * pd) {
     		//writestring(Serial_IO::serialFd[2], "activated\r\n");
     		//DEBUG_PRINT_NET("activated\r\n");
     		startoverflow = timer->readHigh();
+    		payloadActivatedMsg.msg.clock_reg_count = timer->readLow();
+    		payloadActivatedMsg.msg.clock_reg_reset_count = (uint16_t)timer->readHigh();
+    		payloadActivatedLetter.data = payloadActivatedMsg.serialData;
     		MCP23017::enableM1();
     		MCP23017::enableM2();
+    		Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
     		OSTimeDly(10*20);
     		MCP23017::disableM1();
     		MCP23017::disableM2();
@@ -113,8 +130,13 @@ void UserMain(void * pd) {
     	{
     		visitedDeactivated = true;
     		//DEBUG_PRINT_NET("de-activated\r\n");
+    		payloadActivatedMsg.msg.clock_reg_count = timer->readLow();
+    		payloadActivatedMsg.msg.clock_reg_reset_count = (uint16_t)timer->readHigh();
+    		payloadActivatedMsg.msg.experiment = 0xAA; //payload deactivated
+    		payloadActivatedLetter.data = payloadActivatedMsg.serialData;
     		MCP23017::enableM1();
     		MCP23017::enableM2();
+    		Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
     		OSTimeDly(10*20);
     		MCP23017::disableM1();
     		MCP23017::disableM2();
@@ -125,9 +147,9 @@ void UserMain(void * pd) {
     	{
     		//DEBUG_PRINT_NET("timer value %u\r\noverlfows value %u\r\npin value %d\r\n", timer->readLow(), timer->readHigh(), Pins[9].read());
     		RPE::runExperiment(adc, synth);
-    		RGPIO::bamaWait();
+    		BAMA::runExperiment(adc);
     		EFX::runExperiment(adc);
-    		RGPIO::bamaWait();
+    		BAMA::runExperiment(adc);
     		LP::runExperiment(adc, dac);
     	}
     	//DEBUG_PRINT_NET("overlfows value %u\r\n", timer->readHigh());

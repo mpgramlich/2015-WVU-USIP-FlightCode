@@ -137,19 +137,20 @@
 
 //Message Specific Definitions
 	#define MSG_HEADER 				0xFF0A0BCC
+	#define PAYLOAD_ACT_MSG_HEADER	0xEE0F0ABB
 	#define DATA_BEGIN_HEADER		0x4D47474C //'MGGL'
 	#define DATA_END_FOOTER			0xFA
 	#define IDLE 					0x00
 	#define LANGMUIR_P_EXPERIMENT 	0x01
 	#define EFX_EXPERIMENT 			0x02
 	#define RPE_EXPERIMENT 			0x04
-	#define BAMA_EXPERIMENT	 	0x08
+	#define BAMA_EXPERIMENT	 		0x08
 
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 500
 	#define LP_NUM_OF_BUFFERS 500
 	#define RPE_NUM_OF_BUFFERS 500
-	#define BAMA_NUM_OF_BUFFERS 10
+	#define BAMA_NUM_OF_BUFFERS 100
 
 
 #endif /* DEFINITIONS_H_ */

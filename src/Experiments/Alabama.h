@@ -17,7 +17,7 @@
 #include "../comm/i2c/MCP23017/MCP23017.h"
 #include "../RGPIO/RGPIO.h"
 
-#define TIMER_TICKS 125000 //stopwatch count to value, one tick = 1/125000000 seconds
+#define TIMER_TICKS 250000 //stopwatch count to value, one tick = 1/125000000 seconds
 
 namespace BAMA
 {
@@ -47,7 +47,7 @@ namespace BAMA
 		}
 	}
 
-	int runExperiment(ADC* adc, Synth* synth);
+	int runExperiment(ADC* adc);
 
 }; /* namespace BAMA */
 
@@ -61,18 +61,18 @@ struct __attribute__((packed)) BAMA::data_t
 	BYTE footer;
 };
 
-#define BAMA_MSG_SIZE_MINUS_DATA 15
+#define BAMA_MSG_SIZE_MINUS_DATA 16
 struct __attribute__((packed)) BAMA::BAMAmsg_t
 {
 	uint32_t H1;
 	uint16_t counter;
 	uint16_t experiment; //0 idle, 1 Langmuir Probe, BAMA, Radio Plasma, Triple Probe
-	//uint8_t VCOStat;
+	uint8_t VCOStat;
 	uint8_t bufnum;
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[500];
+	data_t data[2000];
 };
 
 union BAMA::BAMASerialMsg_t

@@ -36,12 +36,14 @@ int LP::runExperiment(ADC* adc, DAC* dac)
 			DACTable::currentPlace += 3;
 		}
 		letter[selectedBuffer].msg.H1 = MSG_HEADER;
-		letter[selectedBuffer].msg.counter = selectedBuffer;
+		letter[selectedBuffer].msg.counter = experimentRunCount;
 		letter[selectedBuffer].msg.experiment = LANGMUIR_P_EXPERIMENT;
+		letter[selectedBuffer].msg.bufnum = selectedBuffer;
 		letter[selectedBuffer].msg.datalength = i;
 		letter[selectedBuffer].msg.databegin = DATA_BEGIN_HEADER;
 		package[selectedBuffer].data = letter[selectedBuffer].serialData;
 		package[selectedBuffer].length = i * sizeof(LP::data_t) + LP_MSG_SIZE_MINUS_DATA;
+		experimentRunCount++;
 		Serial_IO::postToQueue((void*) &package[selectedBuffer]);
 	}
 	else

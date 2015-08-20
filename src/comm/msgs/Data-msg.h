@@ -24,12 +24,11 @@ Do not use pointers to access this struct's data, pointers to data members
 	{
 		uint32_t H1;
 		uint8_t counter;
-		uint8_t experiment; //0 idle, 1 Langmuir Probe, EFX, Radio Plasma, Triple Probe
+		uint8_t experiment; //0 idle, 1 Langmuir Probe, EFX, Radio Plasma, Triple Probe, 0xff Exp Start
 		uint32_t databegin;
-		uint8_t data[500];
-		//uint32_t clock_reg_count;
-		//uint32_t clock_reg_reset_count;
-		//uint8_t checksum;
+		uint32_t clock_reg_count;
+		uint32_t clock_reg_reset_count;
+		uint8_t F1;
 	};
 
 	struct __attribute__((packed)) msglarge_t
@@ -38,10 +37,9 @@ Do not use pointers to access this struct's data, pointers to data members
 		uint8_t counter;
 		uint8_t experiment; //0 idle, 1 Langmuir Probe, EFX, Radio Plasma, Triple Probe
 		uint32_t databegin;
-		uint8_t data[1500];
-		//uint32_t clock_reg_count;
-		//uint32_t clock_reg_reset_count;
-		//uint8_t checksum;
+		uint32_t clock_reg_count;
+		uint32_t clock_reg_reset_count;
+		uint8_t F1;
 	};
 
 	const int size = sizeof(msg_t);
@@ -50,13 +48,13 @@ Do not use pointers to access this struct's data, pointers to data members
 	union dataMsg_t {
 		msg_t msg;
 		BYTE data[size+3];
-		char dataC[size+3];
+		char serialData[size+3];
 	};
 
 	union dataMsgLarge_t {
 		msglarge_t msg;
 		BYTE data[sizelarge+3];
-		char dataC[sizelarge+3];
+		char serialData[sizelarge+3];
 	};
 
 	union littleEndianData_t {

@@ -108,7 +108,7 @@ BYTE inline MCP23017::enableM2()
 	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
 }
 
-BYTE inline MCP23017::enableVCO()
+BYTE inline MCP23017::disableVCO()
 {
 #define VCOENABLED 0x10
 	BYTE ret = 0;
@@ -128,7 +128,7 @@ BYTE inline MCP23017::enableVCO()
 #undef VCOENABLED
 }
 
-BYTE inline MCP23017::disableVCO()
+BYTE inline MCP23017::enableVCO()
 {
 #define VCODISABLED 0x10
 	BYTE ret = 0;
