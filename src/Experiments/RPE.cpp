@@ -84,7 +84,6 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 	return ret;
 }
 
-
 /*
 The MIT License (MIT)
 
