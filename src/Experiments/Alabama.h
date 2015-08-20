@@ -17,6 +17,7 @@
 #include "../comm/i2c/MCP23017/MCP23017.h"
 #include "../RGPIO/RGPIO.h"
 
+//125000 ticks equals 1 ms
 #define TIMER_TICKS 250000 //stopwatch count to value, one tick = 1/125000000 seconds
 
 namespace BAMA

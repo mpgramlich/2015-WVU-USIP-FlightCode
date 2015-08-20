@@ -10,11 +10,11 @@
 
 #include <ucos.h>
 
-#define NUM_OF_DAC_POS 240
+#define NUM_OF_DAC_POS 292
 
 namespace DACTable
 {
-	const int size = 720;
+	const int size = 876;
 	extern BYTE zeroVoltage[3] __attribute__ ((aligned(2)));
 
 	extern int currentPlace;
