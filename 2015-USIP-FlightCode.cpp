@@ -118,6 +118,7 @@ void UserMain(void * pd) {
     RGPIO::SetupRGPIO();
 
     MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    MCP23017::disableVCO();
     MCP23017::disableM1();
     MCP23017::disableM2();
 
@@ -179,9 +180,9 @@ void UserMain(void * pd) {
     		//DEBUG_PRINT_NET("timer value %u\r\noverlfows value %u\r\npin value %d\r\n", timer->readLow(), timer->readHigh(), Pins[9].read());
     		RPE::runExperiment(adc, synth);
     		BAMA::runExperiment(adc);
-    		EFX::runExperiment(adc);
-    		BAMA::runExperiment(adc);
+    		//EFX::runExperiment(adc);
     		LP::runExperiment(adc, dac);
+    		BAMA::runExperiment(adc);
     	}
     	//DEBUG_PRINT_NET("overlfows value %u\r\n", timer->readHigh());
     	//DEBUG_PRINT_NET("deciaml overlfows value %u\r\n", timer->readHigh());

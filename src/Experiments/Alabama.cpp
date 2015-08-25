@@ -35,7 +35,7 @@ int BAMA::runExperiment(ADC* adc)
 			OSSemPend(&adc->SPISEM, 0);
 			dataPos++;
 		}
-		while((throttle->simTimer_->ter & 0x2) == 0x2);
+		while(!((throttle->simTimer_->ter & 0x2) == 0x2));
 		RGPIO::setPin(TDIP, FALSE);
 
 		letter[selectedBuffer].msg.H1 = MSG_HEADER;
