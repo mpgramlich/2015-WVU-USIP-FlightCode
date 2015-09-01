@@ -26,7 +26,7 @@
 #include <sim5441x.h>
 #include <HiResTimer.h>
 
-//#include <SysLog.h> //comment to remove ethernet debugging statements
+#include <SysLog.h> //comment to remove ethernet debugging statements
 
 //RGPIO
 	//#define EnableBamaTask 1.0101 //hertz of 1 ms pulse

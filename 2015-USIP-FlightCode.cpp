@@ -145,7 +145,7 @@ void UserMain(void * pd) {
     	{
     		visitedActivated = true;
     		//writestring(Serial_IO::serialFd[2], "activated\r\n");
-    		//DEBUG_PRINT_NET("activated\r\n");
+    		DEBUG_PRINT_NET("activated\r\n");
     		startoverflow = timer->readHigh();
     		payloadActivatedMsg.msg.clock_reg_count = timer->readLow();
     		payloadActivatedMsg.msg.clock_reg_reset_count = (uint16_t)timer->readHigh();
@@ -161,7 +161,7 @@ void UserMain(void * pd) {
     	else if(timer->readHigh() > 8 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
     	{
     		visitedDeactivated = true;
-    		//DEBUG_PRINT_NET("de-activated\r\n");
+    		DEBUG_PRINT_NET("de-activated\r\n");
     		payloadActivatedMsg.msg.clock_reg_count = timer->readLow();
     		payloadActivatedMsg.msg.clock_reg_reset_count = (uint16_t)timer->readHigh();
     		payloadActivatedMsg.msg.experiment = 0xAA; //payload deactivated
