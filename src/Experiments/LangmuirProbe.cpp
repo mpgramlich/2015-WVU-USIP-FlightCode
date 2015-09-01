@@ -23,6 +23,7 @@ int LP::runExperiment(ADC* adc, DAC* dac)
 		DACTable::currentPlace = 0;
 		for(i = 0; i < NUM_OF_DAC_POS/2; i++)
 		{
+			throttle->startStopwatch(THROTTLE_TIME_TICKS);
 			dac->writePos(DACTable::currentPlace);
 			letter[selectedBuffer].msg.data[i].dacPosition = (BYTE)i;
 			OSSemPend(&dac->SPISEM, 0);
@@ -31,6 +32,7 @@ int LP::runExperiment(ADC* adc, DAC* dac)
 			letter[selectedBuffer].msg.data[i].clock_reg_reset_count = (uint16_t)timer->readHigh();
 			letter[selectedBuffer].msg.data[i].footer = DATA_END_FOOTER;
 			OSSemPend(&adc->SPISEM, 0);
+			throttle->busyPendStopwatch();
 			DACTable::currentPlace += 3;
 		}
 		letter[selectedBuffer].msg.H1 = MSG_HEADER;

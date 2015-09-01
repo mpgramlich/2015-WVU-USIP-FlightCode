@@ -138,8 +138,9 @@ BYTE inline MCP23017::enableM2()
 	return I2CSendBuf(MCP23017_Bus_Add, txBuf, 2);
 }
 
-BYTE inline MCP23017::enableVCO()
+BYTE inline MCP23017::disableVCO()
 {
+	DEBUG_PRINT_NET("disable VCO \r\n");
 #define VCOENABLED 0xFC
 	BYTE ret = 0;
 	txBuf[0] = MCP23017_OLATA;
@@ -158,8 +159,9 @@ BYTE inline MCP23017::enableVCO()
 #undef VCOENABLED
 }
 
-BYTE inline MCP23017::disableVCO()
+BYTE inline MCP23017::enableVCO()
 {
+	DEBUG_PRINT_NET("enable VCO \r\n");
 #define VCODISABLED 0xFC
 	BYTE ret = 0;
 	txBuf[0] = MCP23017_OLATA;

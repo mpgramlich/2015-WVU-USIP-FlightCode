@@ -26,7 +26,6 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 		for (i = 0; i < NUM_OF_SAMPLES_PER_FREQ; i++)
 		{
 			throttle->startStopwatch(THROTTLE_TIME_TICKS);
-			//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0; //testing pulses
 			adc->readAllPtr(letter[selectedBuffer].msg.data[dataPos].adcReading);
 			letter[selectedBuffer].msg.data[dataPos].clock_reg_count = timer->readLow();
 			letter[selectedBuffer].msg.data[dataPos].clock_reg_reset_count = (uint16_t) timer->readHigh();
@@ -34,7 +33,6 @@ int RPE::runExperiment(ADC* adc, Synth* synth)
 			letter[selectedBuffer].msg.data[dataPos].synthTablePosition = 0;
 			letter[selectedBuffer].msg.data[dataPos].footer = DATA_END_FOOTER;
 			OSSemPend(&adc->SPISEM, 0);
-			//RGPIO::pRGPIO_BAR[RGPIO_TOG] = RGPIO_0;
 			throttle->busyPendStopwatch();
 			dataPos++;
 		}

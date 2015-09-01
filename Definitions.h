@@ -26,7 +26,7 @@
 #include <sim5441x.h>
 #include <HiResTimer.h>
 
-#include <SysLog.h> //comment to remove ethernet debugging statements
+//#include <SysLog.h> //comment to remove ethernet debugging statements
 
 //RGPIO
 	//#define EnableBamaTask 1.0101 //hertz of 1 ms pulse
@@ -147,10 +147,10 @@
 	#define BAMA_EXPERIMENT	 		0x08
 
 //Experiment Data Buffers
-	#define EFX_NUM_OF_BUFFERS 500
-	#define LP_NUM_OF_BUFFERS 500
-	#define RPE_NUM_OF_BUFFERS 500
-	#define BAMA_NUM_OF_BUFFERS 100
+	#define EFX_NUM_OF_BUFFERS 2
+	#define LP_NUM_OF_BUFFERS 740
+	#define RPE_NUM_OF_BUFFERS 755
+	#define BAMA_NUM_OF_BUFFERS 700
 
 /*
 The MIT License (MIT)
