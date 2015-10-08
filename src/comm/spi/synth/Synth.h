@@ -66,7 +66,7 @@ public:
 							5, &SPISEM, false, DEASSERT_AFTER_LAST, TRUE);
 	}
 
-	inline uint32_t genTestWord(double freq)
+	inline uint32_t genTestWord(double freq) __attribute__((unused))
 	{
 		return freq * 4294967296.0 / 125000000;
 	}
