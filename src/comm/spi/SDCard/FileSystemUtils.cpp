@@ -178,14 +178,14 @@ BYTE InitExtFlash()
          Any other value: Error occurred. See page 22 in the HCC-Embedded
          file system manual for the list of error codes.
    */
-   siprintf(driveType, "No Drive");
+   //siprintf(driveType, "No Drive");
 #if (defined MULTI_MMC)
    iprintf("Mounting drive %d in MULTI_MMC mode\r\n", flashDriveNum);
    siprintf(driveType, "SD/MMC");
    rv = f_mountfat( MMC_DRV_NUM, mmc_initfunc, flashDriveNum );
 #elif (defined USE_MMC)
    iprintf("Mounting drive USE_MMC mode\r\n");
-   siprintf(driveType, "SD/MMC");
+   //siprintf(driveType, "SD/MMC");
    rv = f_mountfat( MMC_DRV_NUM, mmc_initfunc, F_MMC_DRIVE0 );
 #elif (defined USE_CFC)
    iprintf("Mounting drive USE_CFC mode\r\n");
@@ -219,7 +219,7 @@ BYTE InitExtFlash()
    else
    {
       iprintf( "%s drive change failed: ", driveType );
-      DisplayEffsErrorCode( rv );
+      //DisplayEffsErrorCode( rv );
    }
 
    return rv;
