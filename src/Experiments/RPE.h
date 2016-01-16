@@ -103,7 +103,7 @@ struct __attribute__((packed)) RPE::RPEmsg_t
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[3000];
+	data_t data[1000];
 };
 
 union RPE::RPESerialMsg_t

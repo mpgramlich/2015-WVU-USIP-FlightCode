@@ -148,9 +148,9 @@
 
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 2
-	#define LP_NUM_OF_BUFFERS 740
-	#define RPE_NUM_OF_BUFFERS 755
-	#define BAMA_NUM_OF_BUFFERS 700
+	#define LP_NUM_OF_BUFFERS 2000
+	#define RPE_NUM_OF_BUFFERS 2000
+	#define BAMA_NUM_OF_BUFFERS 2000
 
 /*
 The MIT License (MIT)

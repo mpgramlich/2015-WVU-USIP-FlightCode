@@ -30,7 +30,7 @@ void Serial_IO::SerialWriteTask(void * pd)
 		{
 			Serial_IO::writePend(&Serial_IO::serialFd[2], datamsg->data, datamsg->length);
 		}
-		datamsg->inUse = FALSE;
+		//datamsg->inUse = FALSE;
 		err = 0;
 	}
 }
