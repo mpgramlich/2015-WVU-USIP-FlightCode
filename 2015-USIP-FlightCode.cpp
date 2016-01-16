@@ -154,39 +154,10 @@ void UserMain(void * pd) {
     		payloadActivatedLetter.data = payloadActivatedMsg.serialData;
     		MCP23017::enableM1();
     		MCP23017::enableM2();
-
+    		Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
     		OSTimeDly(10*20);
     		MCP23017::disableM1();
     		MCP23017::disableM2();
-
-//slow way of writing SD card Data
-    		f_enterFS();
-    		InitExtFlash();
-
-//to write all data from RPE
-    		//RPE::letter[RPE::selectedBuffer].serialData   (pointer to beginning of data)
-    		//(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer) * sizeof(RPE::RPEmsg_t)  (total length of data block)
-    		WriteFile(reinterpret_cast<BYTE*>(RPE::letter[RPE::selectedBuffer].serialData),
-    					"RPE_Experiment_Data.bin",
-    					(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer) * ((DWORD)sizeof(RPE::RPEmsg_t)));
-
-    		WriteFile(reinterpret_cast<BYTE*>(LP::letter[LP::selectedBuffer].serialData),
-    					"LP_Experiment_Data.bin",
-    					( LP_NUM_OF_BUFFERS -  LP::selectedBuffer) * ((DWORD)sizeof(LP::LPmsg_t)));
-
-    		WriteFile(reinterpret_cast<BYTE*>(BAMA::letter[BAMA::selectedBuffer].serialData),
-    					"BAMA_Experiment_Data.bin",
-    					(BAMA_NUM_OF_BUFFERS - BAMA::selectedBuffer) * ((DWORD)sizeof(BAMA::BAMAmsg_t)));
-
-    		UnmountExtFlash();
-    		f_releaseFS();
-
-    		//Mission Finished, post deactivation message. Enter never ending loop.
-    		Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
-    		while(1)
-    		{
-    			OSTimeDly(20);
-    		}
     	}
     	else if(timer->readHigh() > 8 && !Pins[9].read() && visitedActivated && !visitedDeactivated)
     	{
@@ -202,8 +173,41 @@ void UserMain(void * pd) {
     		OSTimeDly(10*20);
     		MCP23017::disableM1();
     		MCP23017::disableM2();
-    		//writestring(Serial_IO::serialFd[2], "deactivated\r\n");
-    		//printf("overlfows value %u", timer->readHigh());
+
+			//slow way of writing SD card Data
+			f_enterFS();
+			InitExtFlash();
+
+			//to write all data from RPE
+			//RPE::letter[RPE::selectedBuffer].serialData   (pointer to beginning of data)
+			//(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer) * sizeof(RPE::RPEmsg_t)  (total length of data block)
+			WriteFile(
+					reinterpret_cast<BYTE*>(RPE::letter[RPE::selectedBuffer].serialData),
+					"RPE_Experiment_Data.bin",
+					(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer)
+							* ((DWORD) sizeof(RPE::RPEmsg_t)));
+
+			WriteFile(
+					reinterpret_cast<BYTE*>(LP::letter[LP::selectedBuffer].serialData),
+					"LP_Experiment_Data.bin",
+					(LP_NUM_OF_BUFFERS - LP::selectedBuffer)
+							* ((DWORD) sizeof(LP::LPmsg_t)));
+
+			WriteFile(
+					reinterpret_cast<BYTE*>(BAMA::letter[BAMA::selectedBuffer].serialData),
+					"BAMA_Experiment_Data.bin",
+					(BAMA_NUM_OF_BUFFERS - BAMA::selectedBuffer)
+							* ((DWORD) sizeof(BAMA::BAMAmsg_t)));
+
+			UnmountExtFlash();
+			f_releaseFS();
+
+			//Mission Finished, post deactivation message. Enter never ending loop.
+			Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
+			while (1)
+			{
+				OSTimeDly(20);
+			}
     	}
     	else if(visitedActivated && !visitedDeactivated)
     	{
