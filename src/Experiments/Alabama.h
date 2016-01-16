@@ -67,7 +67,7 @@ namespace BAMA
 	//returns -1 if no buffer is available
 	void inline selectNextBuffer()
 	{
-		selectedBuffer = BAMA_NUM_OF_BUFFERS - 1;
+		//selectedBuffer = BAMA_NUM_OF_BUFFERS - 1;
 		for(; selectedBuffer >= 0; selectedBuffer--)
 		{
 			if(package[selectedBuffer].inUse == FALSE)

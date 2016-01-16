@@ -9,7 +9,7 @@
 
 mail::mail_t LP::package[LP_NUM_OF_BUFFERS];
 LP::LPSerialMsg_t LP::letter[LP_NUM_OF_BUFFERS];
-int LP::selectedBuffer = 0;
+int LP::selectedBuffer = LP_NUM_OF_BUFFERS - 1;
 uint16_t LP::experimentRunCount = 1;
 
 int LP::runExperiment(ADC* adc, DAC* dac)

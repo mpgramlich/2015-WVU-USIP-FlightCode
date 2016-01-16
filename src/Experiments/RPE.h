@@ -67,7 +67,7 @@ namespace RPE
 	//returns -1 if no buffer is available
 	void inline selectNextBuffer()
 	{
-		selectedBuffer = RPE_NUM_OF_BUFFERS - 1;
+		//selectedBuffer = RPE_NUM_OF_BUFFERS - 1;
 		for(; selectedBuffer >= 0; selectedBuffer--)
 		{
 			if(package[selectedBuffer].inUse == FALSE)

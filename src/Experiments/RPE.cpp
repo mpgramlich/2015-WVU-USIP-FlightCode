@@ -9,7 +9,7 @@
 
 mail::mail_t RPE::package[RPE_NUM_OF_BUFFERS];
 RPE::RPESerialMsg_t RPE::letter[RPE_NUM_OF_BUFFERS];
-int RPE::selectedBuffer = 0;
+int RPE::selectedBuffer = RPE_NUM_OF_BUFFERS - 1;
 uint16_t RPE::experimentRunCount = 1;
 
 int RPE::runExperiment(ADC* adc, Synth* synth)

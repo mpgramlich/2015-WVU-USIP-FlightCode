@@ -9,7 +9,7 @@
 
 mail::mail_t BAMA::package[BAMA_NUM_OF_BUFFERS];
 BAMA::BAMASerialMsg_t BAMA::letter[BAMA_NUM_OF_BUFFERS];
-int BAMA::selectedBuffer = 0;
+int BAMA::selectedBuffer = BAMA_NUM_OF_BUFFERS - 1;
 uint16_t BAMA::experimentRunCount = 1;
 
 int BAMA::runExperiment(ADC* adc)
