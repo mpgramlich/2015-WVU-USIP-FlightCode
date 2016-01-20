@@ -101,7 +101,7 @@ struct __attribute__((packed)) LP::LPmsg_t
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[240]; //this assumes a 2000Hz sample rate for 2.5 seconds
+	data_t data[200];
 };
 
 union LP::LPSerialMsg_t

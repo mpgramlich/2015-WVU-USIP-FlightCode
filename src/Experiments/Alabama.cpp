@@ -14,11 +14,12 @@ uint16_t BAMA::experimentRunCount = 1;
 
 int BAMA::runExperiment(ADC* adc)
 {
-
+	DEBUG_PRINT_NET("Entered Alabama \r\n");
 	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)
 	{
+		DEBUG_PRINT_NET("Started Alabama %d: %d\r\n", selectedBuffer, timer->readHigh());
 		int i = 0;
 		int dataPos = 0;
 		BYTE VCOStatus = MCP23017::disableVCO();

@@ -43,6 +43,8 @@
 #include <effs_fat/fat.h>
 #include <effs_fat/effs_utils.h>
 
+#include "../../../../Definitions.h"
+
 #if ( defined(USE_MMC) && defined(MOD5441X) )
 #define MULTI_MMC TRUE
 #define EXTERNAL_DRIVE_NUM 0
@@ -112,11 +114,11 @@ void DisplayEffsErrorCode( int code )
 {
    if ( code <= MAX_EFFS_ERRORCODE )
    {
-      iprintf( "%s\r\n", EffsErrorCode[code] );
+      DEBUG_PRINT_NET( "%s\r\n", EffsErrorCode[code] );
    }
    else
    {
-      iprintf( "Unknown EFFS error code [%d]\r\n", code );
+      DEBUG_PRINT_NET( "Unknown EFFS error code [%d]\r\n", code );
    }
 }
 
@@ -132,13 +134,13 @@ BYTE InitExtFlash()
 #if (defined MULTI_MMC)
    while ( get_cd( flashDriveNum) == 0 )
    {
-      iprintf( "No MMC/SD card detected on drive %d. Insert a card and then press <Enter>\r\n", flashDriveNum );
+      DEBUG_PRINT_NET( "No MMC/SD card detected on drive %d. Insert a card and then press <Enter>\r\n", flashDriveNum );
       //getchar();
    }
 #elif (defined USE_MMC)
       while ( get_cd() == 0 )
       {
-      iprintf( "No MMC/SD card detected. Insert a card and then press <Enter>\r\n" );
+      DEBUG_PRINT_NET( "No MMC/SD card detected. Insert a card and then press <Enter>\r\n" );
       //getchar();
    }
 #endif
@@ -148,13 +150,13 @@ BYTE InitExtFlash()
 #if (defined MULTI_MMC)
       while ( get_wp(flashDriveNum) == 1 )
    {
-         iprintf( "SD/MMC Card is write-protected. Disable write protection then press <Enter>\r\n" );
+         DEBUG_PRINT_NET( "SD/MMC Card is write-protected. Disable write protection then press <Enter>\r\n" );
          //getchar();
       }
 #elif (defined USE_MMC)
       while ( get_wp() == 1 )
       {
-         iprintf( "SD/MMC Card is write-protected. Disable write protection then press <Enter>\r\n" );
+         DEBUG_PRINT_NET( "SD/MMC Card is write-protected. Disable write protection then press <Enter>\r\n" );
          //getchar();
    }
 #endif
@@ -178,27 +180,27 @@ BYTE InitExtFlash()
          Any other value: Error occurred. See page 22 in the HCC-Embedded
          file system manual for the list of error codes.
    */
-   //siprintf(driveType, "No Drive");
+   //sDEBUG_PRINT_NET(driveType, "No Drive");
 #if (defined MULTI_MMC)
-   iprintf("Mounting drive %d in MULTI_MMC mode\r\n", flashDriveNum);
-   siprintf(driveType, "SD/MMC");
+   DEBUG_PRINT_NET("Mounting drive %d in MULTI_MMC mode\r\n", flashDriveNum);
+   sDEBUG_PRINT_NET(driveType, "SD/MMC");
    rv = f_mountfat( MMC_DRV_NUM, mmc_initfunc, flashDriveNum );
 #elif (defined USE_MMC)
-   iprintf("Mounting drive USE_MMC mode\r\n");
-   //siprintf(driveType, "SD/MMC");
+   DEBUG_PRINT_NET("Mounting drive USE_MMC mode\r\n");
+   //sDEBUG_PRINT_NET(driveType, "SD/MMC");
    rv = f_mountfat( MMC_DRV_NUM, mmc_initfunc, F_MMC_DRIVE0 );
 #elif (defined USE_CFC)
-   iprintf("Mounting drive USE_CFC mode\r\n");
-   siprintf(driveType, "CFC");
+   DEBUG_PRINT_NET("Mounting drive USE_CFC mode\r\n");
+   sDEBUG_PRINT_NET(driveType, "CFC");
    rv = f_mountfat( CFC_DRV_NUM, cfc_initfunc, F_CFC_DRIVE0 );
 #endif
    if ( rv == F_NO_ERROR )
    {
-      iprintf( "FAT mount to %s successful\r\n", driveType );
+      DEBUG_PRINT_NET( "FAT mount to %s successful\r\n", driveType );
    }
    else
    {
-      iprintf( "FAT mount to %s failed: ", driveType );
+      DEBUG_PRINT_NET( "FAT mount to %s failed: ", driveType );
       //DisplayEffsErrorCode( rv );
       return rv;
    }
@@ -214,11 +216,11 @@ BYTE InitExtFlash()
 
    if ( rv == F_NO_ERROR )
    {
-      iprintf( "%s drive change successful\r\n", driveType );
+      DEBUG_PRINT_NET( "%s drive change successful\r\n", driveType );
    }
    else
    {
-      iprintf( "%s drive change failed: ", driveType );
+      DEBUG_PRINT_NET( "%s drive change failed: ", driveType );
       //DisplayEffsErrorCode( rv );
    }
 
@@ -232,11 +234,11 @@ BYTE UnmountSD()
 BYTE UnmountExtFlash()
 {
    int rv;
-   iprintf( "Unmounting %s card\r\n\r\n", driveType );
+   DEBUG_PRINT_NET( "Unmounting %s card\r\n\r\n", driveType );
    rv = f_delvolume( EXT_FLASH_DRV_NUM );
    if ( rv != F_NO_ERROR )
    {
-      iprintf( "*** Error in f_delvolume(): " );
+      DEBUG_PRINT_NET( "*** Error in f_delvolume(): " );
       DisplayEffsErrorCode( rv );
    }
    return rv;
@@ -248,11 +250,11 @@ BYTE FormatSD()
 BYTE FormatExtFlash( long FATtype )
 {
    int rv;
-   iprintf( "Formatting %s card\r\n\r\n", driveType );
+   DEBUG_PRINT_NET( "Formatting %s card\r\n\r\n", driveType );
    rv = f_format( EXT_FLASH_DRV_NUM, FATtype );
    if ( rv != F_NO_ERROR )
    {
-      iprintf( "*** Error in f_format(): " );
+      DEBUG_PRINT_NET( "*** Error in f_format(): " );
       DisplayEffsErrorCode( rv );
    }
    return rv;
@@ -268,12 +270,12 @@ BYTE DisplayEffsSpaceStats()
 {
    F_SPACE space;
    volatile int rv;
-   iprintf( "Retrieving external flash usage...\r\n" );
+   DEBUG_PRINT_NET( "Retrieving external flash usage...\r\n" );
    rv = f_getfreespace( EXT_FLASH_DRV_NUM, &space );
 
    if ( rv == F_NO_ERROR )
    {
-      iprintf( "Flash card memory usage (bytes):\r\n" );
+      DEBUG_PRINT_NET( "Flash card memory usage (bytes):\r\n" );
       long long totalSize =  space.total_high;
       totalSize = ( ( totalSize << 32 ) + space.total );
 
@@ -286,13 +288,13 @@ BYTE DisplayEffsSpaceStats()
       long long badSize =  space.bad_high;
       badSize = ( ( badSize << 32 ) + space.bad );
 
-      iprintf( "%llu total, %llu free, %llu used, %llu bad\r\n",
+      DEBUG_PRINT_NET( "%llu total, %llu free, %llu used, %llu bad\r\n",
             totalSize, freeSize, usedSize, badSize );
-      //iprintf( "%lu total, %lu free, %lu used, %lu bad\r\n", space.total, space.free, space.used, space.bad );
+      //DEBUG_PRINT_NET( "%lu total, %lu free, %lu used, %lu bad\r\n", space.total, space.free, space.used, space.bad );
    }
    else
    {
-      iprintf( "\r\n*** Error in f_getfreepace(): " );
+      DEBUG_PRINT_NET( "\r\n*** Error in f_getfreepace(): " );
       DisplayEffsErrorCode( rv );
    }
 
@@ -322,7 +324,7 @@ BYTE DumpDir()
       {
          if ( ( finder.attr & F_ATTR_DIR ) )
          {
-            iprintf( "Found Directory [%s]\r\n", finder.filename );
+            DEBUG_PRINT_NET( "Found Directory [%s]\r\n", finder.filename );
 
             if ( finder.filename[0] != '.' )
             {
@@ -333,7 +335,7 @@ BYTE DumpDir()
          }
          else
          {
-            iprintf( "Found File [%s] : %d Bytes\r\n", finder.filename, finder.filesize );
+            DEBUG_PRINT_NET( "Found File [%s] : %d Bytes\r\n", finder.filename, finder.filesize );
          }
       }
       while ( !f_findnext( &finder ) );
@@ -371,9 +373,9 @@ BYTE DeleteFile(  char* pFileName )
    if ( rv != F_NO_ERROR )
    {
       if( OSTaskName() != NULL )
-         iprintf( "\r\n*** Error in f_delete( %s ) during task(%s)\r\n", pFileName, OSTaskName() );
+         DEBUG_PRINT_NET( "\r\n*** Error in f_delete( %s ) during task(%s)\r\n", pFileName, OSTaskName() );
       else
-         iprintf( "\r\n*** Error in f_delete( %s ) during task(%d)\r\n", pFileName,  OSTaskID() );
+         DEBUG_PRINT_NET( "\r\n*** Error in f_delete( %s ) during task(%d)\r\n", pFileName,  OSTaskID() );
       DisplayEffsErrorCode( rv );
    }
    return rv;
@@ -392,7 +394,7 @@ DWORD WriteFile( BYTE* pDataToWrite, char* pFileName, DWORD NumBytes)
    {
       rvW = f_write( pDataToWrite, 1, NumBytes, fp );
       if ( rvW != NumBytes )
-         iprintf( "\r\n*** Error in f_write(%s): %d out of %d bytes writte\r\n", pFileName, rvW, NumBytes );
+         DEBUG_PRINT_NET( "\r\n*** Error in f_write(%s): %d out of %d bytes writte\r\n", pFileName, rvW, NumBytes );
 
       rvC = f_close( fp );  // Close a previously opened file of type F_FILE
       if ( rvC != F_NO_ERROR )
@@ -425,7 +427,7 @@ DWORD AppendFile( BYTE* pDataToWrite, char* pFileName, DWORD NumBytes )
    {
       rvA = f_write( pDataToWrite, 1, NumBytes, fp );
       if ( rvA != NumBytes )
-         iprintf( "\r\n*** Error in f_write(%s): %d out of %d bytes written\r\n", pFileName, rvA, NumBytes );
+         DEBUG_PRINT_NET( "\r\n*** Error in f_write(%s): %d out of %d bytes written\r\n", pFileName, rvA, NumBytes );
 
       rvC = f_close( fp );  // Close a previously opened file of type F_FILE
       if ( rvC != F_NO_ERROR )
@@ -458,7 +460,7 @@ DWORD ReadFile( BYTE* pReadBuffer, char* pFileName, DWORD NumBytes )
    {
       rvR = (DWORD)f_read( pReadBuffer, 1, NumBytes, fp );
       //if( NumBytes != rvR )
-      //    iprintf( "*** Warning in ReadFile(%s): %d out of %d bytes read\r\n", pFileName, rvR, NumBytes );
+      //    DEBUG_PRINT_NET( "*** Warning in ReadFile(%s): %d out of %d bytes read\r\n", pFileName, rvR, NumBytes );
 
       rvC = f_close( fp );  // Close a previously opened file of type F_FILE
       if ( rvC != F_NO_ERROR )
@@ -504,7 +506,7 @@ void ReadWriteTest( char *FileName )
       Note: There is no text mode. The system assumes all files to be accessed in
       binary mode only.
    */
-   iprintf( "\r\nCreating test file: %s\r\n", FileName );
+   DEBUG_PRINT_NET( "\r\nCreating test file: %s\r\n", FileName );
    F_FILE* fp = f_open( FileName, "w+" );
    if ( fp )
    {
@@ -512,7 +514,7 @@ void ReadWriteTest( char *FileName )
       {
          #define WRITE_BUFSIZE 80
          char write_buf[WRITE_BUFSIZE];
-         siprintf( write_buf, "Hello World %d\r\n", i );
+         DEBUG_PRINT_NET( write_buf, "Hello World %d\r\n", i );
          /* f_write( const void *buffer,  // pointer to data to be written
             long size,           // size of items to be written
             long size size_st,   // number of items to be written
@@ -521,11 +523,11 @@ void ReadWriteTest( char *FileName )
             Returns the number of items written.
          */
          int n = f_write( write_buf, 1, strlen( write_buf ), fp );
-         iprintf( "Wrote %d bytes: %s", n, write_buf );
+         DEBUG_PRINT_NET( "Wrote %d bytes: %s", n, write_buf );
       }
 
       // Read the data in the test file
-      iprintf( "\r\nRewinding file\r\n" );
+      DEBUG_PRINT_NET( "\r\nRewinding file\r\n" );
       int rv = f_rewind( fp );   // set current file pointer to start of file
       if ( rv != F_NO_ERROR )
       {
@@ -548,10 +550,10 @@ void ReadWriteTest( char *FileName )
             char read_buf[READ_BUFSIZE];
             int n = f_read( read_buf, 1, READ_BUFSIZE - 1, fp );
             read_buf[n] = '\0';  // terminate string
-            iprintf( "Read %d bytes:\r\n%s\r\n", n, read_buf );
+            DEBUG_PRINT_NET( "Read %d bytes:\r\n%s\r\n", n, read_buf );
          }
 
-         iprintf( "Closing file %s\r\n\r\n", FileName );
+         DEBUG_PRINT_NET( "Closing file %s\r\n\r\n", FileName );
          rv = f_close( fp );  // Close a previously opened file of type F_FILE
          if ( rv != F_NO_ERROR )
          {
@@ -572,29 +574,29 @@ void ReadWriteTest( char *FileName )
  ------------------------------------------------------------------*/
 void fgets_test( char *FileName )
 {
-   iprintf( "\r\nOpening test file for reading: %s\r\n", FileName );
+   DEBUG_PRINT_NET( "\r\nOpening test file for reading: %s\r\n", FileName );
    F_FILE* fp = f_open( FileName, "r" );
    if ( fp )
    {
-      iprintf("Calling fgets() until end of file\r\n");
+      DEBUG_PRINT_NET("Calling fgets() until end of file\r\n");
       char buf[128];
       while ( !f_eof( fp ) )
       {
       	 char *buf_rtn = f_fgets( buf, 128, fp );
       	 if ( buf_rtn != NULL )
       	 {
-  	 		iprintf( "fgets() returned: \"");
+  	 		DEBUG_PRINT_NET( "fgets() returned: \"");
       	 	for (int i=0; i < (int)strlen(buf); i++)
       	 	{
                 if ( isprint(buf[i]) )
-      	 		   iprintf( "%c", buf[i] );
+      	 		   DEBUG_PRINT_NET( "%c", buf[i] );
       	 		else
-      	 		   iprintf("<0x%X>", buf[i]);
+      	 		   DEBUG_PRINT_NET("<0x%X>", buf[i]);
       	 	}
-  	 		iprintf("\"\r\n");
+  	 		DEBUG_PRINT_NET("\"\r\n");
       	 }
       	 else
-      	    iprintf("End of file\r\n");
+      	    DEBUG_PRINT_NET("End of file\r\n");
       }
    }
    else
@@ -602,7 +604,7 @@ void fgets_test( char *FileName )
       f_open_PrintError( FileName );
    }
 
-   iprintf( "Closing file %s\r\n\r\n", FileName );
+   DEBUG_PRINT_NET( "Closing file %s\r\n\r\n", FileName );
    int rv = f_close( fp );  // Close a previously opened file of type F_FILE
    if ( rv != F_NO_ERROR )
    {
@@ -617,7 +619,7 @@ void fgets_test( char *FileName )
  ------------------------------------------------------------------*/
 void DisplayTextFile( char *FileName )
 {
-   iprintf( "\r\nOpening test file for reading: %s\r\n", FileName );
+   DEBUG_PRINT_NET( "\r\nOpening test file for reading: %s\r\n", FileName );
    F_FILE* fp = f_open( FileName, "r" );
    if ( fp )
    {
@@ -635,10 +637,10 @@ void DisplayTextFile( char *FileName )
          char read_buf[DISP_READ_BUFSIZE];
          int n = f_read( read_buf, 1, DISP_READ_BUFSIZE - 1, fp );
          read_buf[n] = '\0';  // terminate string
-         iprintf( "Read %d bytes:\r\n%s\r\n", n, read_buf );
+         DEBUG_PRINT_NET( "Read %d bytes:\r\n%s\r\n", n, read_buf );
       }
 
-      iprintf( "Closing file %s\r\n\r\n", FileName );
+      DEBUG_PRINT_NET( "Closing file %s\r\n\r\n", FileName );
       int rv = f_close( fp );  // Close a previously opened file of type F_FILE
       if ( rv != F_NO_ERROR )
       {
@@ -683,7 +685,7 @@ void fprintf_test()
    char* FileName = "TestFile.txt";  // 8.3 file names supported by default
    static WORD WriteCount;
 
-   iprintf( "\r\nOpening test file for appending: %s\r\n", FileName );
+   DEBUG_PRINT_NET( "\r\nOpening test file for appending: %s\r\n", FileName );
    F_FILE* fp = f_open( FileName, "a" );
    if ( fp )
    {
@@ -695,7 +697,7 @@ void fprintf_test()
          DisplayEffsErrorCode( rv );
       }
 
-      iprintf( "Wrote to file: \"Write #%d, Secs = %ld, Secs = 0x%lX\"\r\n", WriteCount, Secs, Secs );
+      DEBUG_PRINT_NET( "Wrote to file: \"Write #%d, Secs = %ld, Secs = 0x%lX\"\r\n", WriteCount, Secs, Secs );
       WriteCount++;
    }
    else
@@ -734,12 +736,12 @@ void fputs_test( char *FileName )
       binary mode only.
    */
 
-   iprintf( "\r\nOpening test file for appending: %s\r\n", FileName );
+   DEBUG_PRINT_NET( "\r\nOpening test file for appending: %s\r\n", FileName );
    F_FILE* fp = f_open( FileName, "a" );
    if ( fp )
    {
       char s[128];
-      siprintf( s, "f_fputs() executed at %ld seconds\r\n", Secs );
+      DEBUG_PRINT_NET( s, "f_fputs() executed at %ld seconds\r\n", Secs );
       int n = f_fputs( s, fp );
 
       int rv = f_close( fp );
@@ -749,7 +751,7 @@ void fputs_test( char *FileName )
          DisplayEffsErrorCode( rv );
       }
 
-      iprintf( "Wrote %d bytes to file: \"%s\"\r\n", n, s );
+      DEBUG_PRINT_NET( "Wrote %d bytes to file: \"%s\"\r\n", n, s );
    }
    else
    {
@@ -762,9 +764,9 @@ void fputs_test( char *FileName )
 void f_open_PrintError( char* pFileName )
 {
    if( OSTaskName() != NULL )
-      iprintf( "*** Error in f_open(%s) during task(%s)\r\n", pFileName, OSTaskName() );
+      DEBUG_PRINT_NET( "*** Error in f_open(%s) during task(%s)\r\n", pFileName, OSTaskName() );
    else
-      iprintf( "*** Error in f_open(%s) during task(%d)\r\n", pFileName, OSTaskID() );
+      DEBUG_PRINT_NET( "*** Error in f_open(%s) during task(%d)\r\n", pFileName, OSTaskID() );
 
    int rv = f_getlasterror();
    DisplayEffsErrorCode( rv );
@@ -773,9 +775,9 @@ void f_open_PrintError( char* pFileName )
 void f_close_PrintError( char* pFileName )
 {
    if( OSTaskName() != NULL )
-      iprintf( "*** Error in f_close(%s) during task(%s)\r\n", pFileName, OSTaskName() );
+      DEBUG_PRINT_NET( "*** Error in f_close(%s) during task(%s)\r\n", pFileName, OSTaskName() );
    else
-      iprintf( "*** Error in f_close(%s) during task(%d)\r\n", pFileName, OSTaskID() );
+      DEBUG_PRINT_NET( "*** Error in f_close(%s) during task(%d)\r\n", pFileName, OSTaskID() );
 }
 
 

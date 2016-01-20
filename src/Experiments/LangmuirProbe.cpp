@@ -14,11 +14,13 @@ uint16_t LP::experimentRunCount = 1;
 
 int LP::runExperiment(ADC* adc, DAC* dac)
 {
+	DEBUG_PRINT_NET("Entered LP \r\n");
 	RGPIO::setMuxLP();
 	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)
 	{
+		DEBUG_PRINT_NET("Started LP %d: %d\r\n", selectedBuffer, timer->readHigh());
 		int i;
 		DACTable::currentPlace = 0;
 		for(i = 0; i < NUM_OF_DAC_POS/2; i++)

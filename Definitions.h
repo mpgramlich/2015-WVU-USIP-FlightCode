@@ -113,7 +113,7 @@
 
 //Network Debugging
 	#ifdef SYSLOG_H
-	#define SYSLOGIP "192.168.11.10"
+	#define SYSLOGIP "192.168.11.99"
 	#define DEBUG_PRINT_NET(args...) SysLog(args)
 	#else
 	#define DEBUG_PRINT_NET(args...)
@@ -148,9 +148,9 @@
 
 //Experiment Data Buffers
 	#define EFX_NUM_OF_BUFFERS 2
-	#define LP_NUM_OF_BUFFERS 2000
-	#define RPE_NUM_OF_BUFFERS 2000
-	#define BAMA_NUM_OF_BUFFERS 2000
+	#define LP_NUM_OF_BUFFERS 3000
+	#define RPE_NUM_OF_BUFFERS 3000
+	#define BAMA_NUM_OF_BUFFERS 6000
 
 /*
 The MIT License (MIT)

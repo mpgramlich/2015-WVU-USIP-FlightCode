@@ -14,10 +14,12 @@ uint16_t RPE::experimentRunCount = 1;
 
 int RPE::runExperiment(ADC* adc, Synth* synth)
 {
+	DEBUG_PRINT_NET("Entered RPE %d\r\n", timer->readHigh());
 	int ret = 0;
 	selectNextBuffer();
 	if(selectedBuffer >= 0)
 	{
+		DEBUG_PRINT_NET("Started RPE %d: %d\r\n", selectedBuffer, timer->readHigh());
 		int i;
 		int dataPos = 0;
 		BYTE VCOStatus = 0;

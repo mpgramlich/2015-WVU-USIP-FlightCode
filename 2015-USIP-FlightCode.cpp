@@ -119,7 +119,7 @@ void UserMain(void * pd) {
 
     RGPIO::SetupRGPIO();
 
-    MCP23017::init();       //default argument sets bus speed to ~1.5Mbits
+    MCP23017::init();       //default argument sets bus speed to ~.05Mbits
     MCP23017::disableVCO();
     MCP23017::disableM1();
     MCP23017::disableM2();
@@ -175,27 +175,29 @@ void UserMain(void * pd) {
     		MCP23017::disableM2();
 
 			//slow way of writing SD card Data
+    		DEBUG_PRINT_NET("Starting SD Card Writing \r\n");
+
 			f_enterFS();
 			InitExtFlash();
 
 			//to write all data from RPE
 			//RPE::letter[RPE::selectedBuffer].serialData   (pointer to beginning of data)
 			//(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer) * sizeof(RPE::RPEmsg_t)  (total length of data block)
-			WriteFile(
-					reinterpret_cast<BYTE*>(RPE::letter[RPE::selectedBuffer].serialData),
-					"RPE_Experiment_Data.bin",
+			AppendFile(
+					reinterpret_cast<BYTE*>( RPE::letter[RPE::selectedBuffer].serialData),
+					"RPE_Experiment_Data.txt",
 					(RPE_NUM_OF_BUFFERS - RPE::selectedBuffer)
 							* ((DWORD) sizeof(RPE::RPEmsg_t)));
 
-			WriteFile(
-					reinterpret_cast<BYTE*>(LP::letter[LP::selectedBuffer].serialData),
-					"LP_Experiment_Data.bin",
+			AppendFile(
+					reinterpret_cast<BYTE*>(  LP::letter[  LP::selectedBuffer].serialData),
+					"LP_Experiment_Data.txt",
 					(LP_NUM_OF_BUFFERS - LP::selectedBuffer)
 							* ((DWORD) sizeof(LP::LPmsg_t)));
 
-			WriteFile(
+			AppendFile(
 					reinterpret_cast<BYTE*>(BAMA::letter[BAMA::selectedBuffer].serialData),
-					"BAMA_Experiment_Data.bin",
+					"BAMA_Experiment_Data.txt",
 					(BAMA_NUM_OF_BUFFERS - BAMA::selectedBuffer)
 							* ((DWORD) sizeof(BAMA::BAMAmsg_t)));
 
@@ -203,6 +205,7 @@ void UserMain(void * pd) {
 			f_releaseFS();
 
 			//Mission Finished, post deactivation message. Enter never ending loop.
+			DEBUG_PRINT_NET("Mission Finished \r\n");
 			Serial_IO::postToQueue((void*) &payloadActivatedLetter); //doesn't matter when this is sent, data is already recorded
 			while (1)
 			{

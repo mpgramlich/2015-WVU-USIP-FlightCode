@@ -103,7 +103,7 @@ struct __attribute__((packed)) BAMA::BAMAmsg_t
 	uint16_t datalength;
 	uint32_t databegin;
 	//uint16_t checksum;
-	data_t data[500];
+	data_t data[100];
 };
 
 union BAMA::BAMASerialMsg_t
