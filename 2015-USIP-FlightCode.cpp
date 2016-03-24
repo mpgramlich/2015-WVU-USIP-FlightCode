@@ -110,7 +110,7 @@ void UserMain(void * pd) {
     	actual = raw;
     	if(raw >= 0x20000)
     	{
-    		actual -= 0x3fffff;
+    		actual -= 0x3ffff;
     	}
     	volts = (double)actual * 0.000034332275390625;
     	printf("%3.8f\n", volts);
